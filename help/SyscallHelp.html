@@ -1,0 +1,505 @@
+<html>
+<title>MIPS syscall functions available in MARS
+</title>
+<body>
+<center>
+<h3>SYSCALL functions available in MARS</h3>
+  <h3 style="color: #ff232b">Chinese Version is provided at the end of English Version, by Microsoft translate</h3>
+</center>
+
+<h3>Introduction</h3>
+<p>A number of system services, mainly for input and output, are available for use by 
+your MIPS program.  They are described in the table below.</p>
+<p>MIPS register contents are not affected by a system call, except for result registers
+as specified in the table below.</p>
+<h3>How to use SYSCALL system services</h3>
+Step 1. Load the service number in register $v0.<br>
+Step 2. Load argument values, if any, in $a0, $a1, $a2, or $f12 as specified.<br>
+Step 3. Issue the SYSCALL instruction.<br>
+Step 4. Retrieve return values, if any, from result registers as specified.<br>
+</p>
+<strong>Example: display the value stored in $t0 on the console</strong><br>
+<pre>
+    li  $v0, 1           # service 1 is print integer
+    add $a0, $t0, $zero  # load desired value into argument register $a0, using pseudo-op
+    syscall
+</pre>
+<h3>Table of Available Services</h3>
+
+<table border=1>
+  <tr>  <th>Service</th>  <th>Code in $v0</th>  <th>Arguments</th>  <th>Result</th>  </tr>
+  <tr><td>print integer</td>                 <td align="center">1</td>   <td>$a0 = integer to print</td>  <td>&nbsp;</td></tr>
+  <tr><td>print float</td>                   <td align="center">2</td>   <td>$f12 = float to print</td>   <td>&nbsp;</td></tr>
+  <tr><td>print double</td>                  <td align="center">3</td>   <td>$f12 = double to print</td>  <td>&nbsp;</td></tr>
+  <tr><td>print string</td>                  <td align="center">4</td>   <td>$a0 = address of null-terminated string to print</td>  <td>&nbsp;</td></tr>
+  <tr><td>read integer</td>                  <td align="center">5</td>   <td>&nbsp;</td>  <td>$v0 contains integer read</td></tr>
+  <tr><td>read float</td>                    <td align="center">6</td>   <td>&nbsp;</td>  <td>$f0 contains float read</td></tr>
+  <tr><td>read double</td>                   <td align="center">7</td>   <td>&nbsp;</td>  <td>$f0 contains double read</td></tr>
+  <tr><td>read string</td>                   <td align="center">8</td>   <td>$a0 = address of input buffer<br>$a1 = maximum number of characters to read</td>  <td><i>See note below table</i></td></tr>
+  <tr><td>sbrk (allocate heap memory)</td>   <td align="center">9</td>   <td>$a0 = number of bytes to allocate</td>  <td>$v0 contains address of allocated memory</td></tr>
+  <tr><td>exit (terminate execution)</td>   <td align="center">10</td>   <td>&nbsp;</td>  <td>&nbsp;</td></tr>
+  <tr><td>print character</td>              <td align="center">11</td>   <td>$a0 = character to print</td>  <td><i>See note below table</i></td></tr>
+  <tr><td>read character</td>               <td align="center">12</td>   <td>&nbsp;</td>  <td>$v0 contains character read</td></tr>
+  <tr><td>open file</td>                    <td align="center">13</td>   <td>$a0 = address of null-terminated string containing filename<br>$a1 = flags<br>$a2 = mode</td>  <td>$v0 contains file descriptor (negative if error).  <i>See note below table</i></td></tr>
+  <tr><td>read from file</td>               <td align="center">14</td>   <td>$a0 = file descriptor<br>$a1 = address of input buffer<br>$a2 = maximum number of characters to read</td>  <td>$v0 contains number of characters read (0 if end-of-file, negative if error).  <i>See note below table</i></td></tr>
+  <tr><td>write to file</td>                <td align="center">15</td>   <td>$a0 = file descriptor<br>$a1 = address of output buffer<br>$a2 = number of characters to write</td>  <td>$v0 contains number of characters written (negative if error).  <i>See note below table</i></td></tr>
+  <tr><td>close file</td>                   <td align="center">16</td>   <td>$a0 = file descriptor</td>  <td>&nbsp;</td></tr>
+  <tr><td>exit2 (terminate with value)</td> <td align="center">17</td>   <td>$a0 = termination result</td>  <td><i>See note below table</i></td></tr>
+  <tr><td align="center" colspan=4><em>Services 1 through 17 are compatible with the SPIM simulator, other than Open File (13) as described in the Notes below the table.
+  Services 30 and higher are exclusive to MARS.</em></td></tr>
+  <tr><td>time (system time)</td>           <td align="center">30</td>   <td>&nbsp;</td><td>$a0 = low order 32 bits of system time<br>$a1 = high order 32 bits of system time.  <i>See note below table</i></td></tr>
+  <tr><td>MIDI out</td>                     <td align="center">31</td>   <td>$a0 = pitch (0-127)<br>$a1 = duration in milliseconds<br>$a2 = instrument (0-127)<br>$a3 = volume (0-127)</td>  <td>Generate tone and return immediately.  <i>See note below table</i></td></tr>
+  <tr><td>sleep</td>                        <td align="center">32</td>   <td>$a0 = the length of time to sleep in milliseconds.</td>  <td>Causes the MARS Java thread to sleep for (at least) the specified number of milliseconds. This timing will not be precise, as the Java implementation will add some overhead.</td></tr>
+  <tr><td>MIDI out synchronous              <td align="center">33</td>   <td>$a0 = pitch (0-127)<br>$a1 = duration in milliseconds<br>$a2 = instrument (0-127)<br>$a3 = volume (0-127)</td>  <td>Generate tone and return upon tone completion.  <i>See note below table</i></td></tr>
+  <tr><td>print integer in hexadecimal</td> <td align="center">34</td>   <td>$a0 = integer to print</td>  <td>Displayed value is 8 hexadecimal digits, left-padding with zeroes if necessary.</td></tr>
+  <tr><td>print integer in binary</td>      <td align="center">35</td>   <td>$a0 = integer to print</td>  <td>Displayed value is 32 bits, left-padding with zeroes if necessary.</td></tr>
+  <tr><td>print integer as unsigned</td>    <td align="center">36</td>   <td>$a0 = integer to print</td>  <td>Displayed as unsigned decimal value.</td></tr>
+  <tr><td align="center">(not used)</td>    <td align="center">37-39</td><td>&nbsp;</td>  <td>&nbsp;</td></tr>
+  <tr><td>set seed</td>                     <td align="center">40</td>   <td>$a0 = i.d. of pseudorandom number generator (any int).<br>$a1 = seed for corresponding pseudorandom number generator.</td>  <td>No values are returned. Sets the seed of the corresponding underlying Java pseudorandom number generator (<tt>java.util.Random</tt>). <i>See note below table</i></td></tr>
+  <tr><td>random int</td>                   <td align="center">41</td>   <td>$a0 = i.d. of pseudorandom number generator (any int).</td>  <td>$a0 contains the next pseudorandom, uniformly distributed int value from this random number generator's sequence. <i>See note below table</i></td></tr>
+  <tr><td>random int range</td>             <td align="center">42</td>   <td>$a0 = i.d. of pseudorandom number generator (any int).<br>$a1 = upper bound of range of returned values.</td>  <td>$a0 contains pseudorandom, uniformly distributed int value in the range 0 <= [int] < [upper bound], drawn from this random number generator's sequence.  <i>See note below table</i></td></tr>
+  <tr><td>random float</td>                 <td align="center">43</td>   <td>$a0 = i.d. of pseudorandom number generator (any int).</td>  <td>$f0 contains the next pseudorandom, uniformly distributed float value in the range 0.0 <= f < 1.0 from this random number generator's sequence.  <i>See note below table</i></td></tr>
+  <tr><td>random double</td>                <td align="center">44</td>   <td>$a0 = i.d. of pseudorandom number generator (any int).</td>  <td>$f0 contains the next pseudorandom, uniformly distributed double value in the range 0.0 <= f < 1.0 from this random number generator's sequence.  <i>See note below table</i></td></tr>
+  <tr><td align="center">(not used)</td>    <td align="center">45-49</td><td>&nbsp;</td>  <td>&nbsp;</td></tr>
+  <tr><td>ConfirmDialog</td>                <td align="center">50</td>   <td>$a0 = address of null-terminated string that is the message to user</td>  <td>$a0 contains value of user-chosen option<br>0: Yes<br>1: No<br>2: Cancel</td></tr>
+  <tr><td>InputDialogInt</td>               <td align="center">51</td>   <td>$a0 = address of null-terminated string that is the message to user</td>  <td>$a0 contains int read<br>$a1 contains status value<br>0: OK status<br>-1: input data cannot be correctly parsed<br>-2: Cancel was chosen<br>-3: OK was chosen but no data had been input into field</td></tr>
+  <tr><td>InputDialogFloat</td>             <td align="center">52</td>   <td>$a0 = address of null-terminated string that is the message to user</td>  <td>$f0 contains float read<br>$a1 contains status value<br>0: OK status<br>-1: input data cannot be correctly parsed<br>-2: Cancel was chosen<br>-3: OK was chosen but no data had been input into field</td></tr>
+  <tr><td>InputDialogDouble</td>            <td align="center">53</td>   <td>$a0 = address of null-terminated string that is the message to user</td>  <td>$f0 contains double read<br>$a1 contains status value<br>0: OK status<br>-1: input data cannot be correctly parsed<br>-2: Cancel was chosen<br>-3: OK was chosen but no data had been input into field</td></tr>
+  <tr><td>InputDialogString</td>            <td align="center">54</td>   <td>$a0 = address of null-terminated string that is the message to user<br>$a1 = address of input buffer<br>$a2 = maximum number of characters to read</td>  <td><i>See Service 8 note below table</i><br>$a1 contains status value<br>0: OK status. Buffer contains the input string.<br>-2: Cancel was chosen. No change to buffer. <br>-3: OK was chosen but no data had been input into field. No change to buffer.<br>-4: length of the input string exceeded the specified maximum. Buffer contains the maximum allowable input string plus a terminating null.</td></tr>
+  <tr><td>MessageDialog</td>                <td align="center">55</td>   <td>$a0 = address of null-terminated string that is the message to user<br>$a1 = the type of message to be displayed:<br> 
+0: error message, indicated by Error icon <!-- <img src="SyscallMessageDialogError.gif"> --> <br>
+1: information message, indicated by Information icon <!-- <img src="SyscallMessageDialogInformation.gif"> --> <br>
+2: warning message, indicated by Warning icon <!-- <img src="SyscallMessageDialogWarning.gif"> --> <br>
+3: question message, indicated by Question icon <!-- <img src="SyscallMessageDialogQuestion.gif"> --> <br>
+other: plain message (no icon displayed)
+</td>  <td>N/A</td></tr>
+  <tr><td>MessageDialogInt</td>             <td align="center">56</td>   <td>$a0 = address of null-terminated string that is an information-type message to user<br>$a1 = int value to display in string form after the first string</td>  <td>N/A</td></tr>
+  <tr><td>MessageDialogFloat</td>           <td align="center">57</td>   <td>$a0 = address of null-terminated string that is an information-type message to user<br>$f12 = float value to display in string form after the first string</td>  <td>N/A</td></tr>
+  <tr><td>MessageDialogDouble</td>          <td align="center">58</td>   <td>$a0 = address of null-terminated string that is an information-type message to user<br>$f12 = double value to display in string form after the first string</td>  <td>N/A</td></tr>
+  <tr><td>MessageDialogString</td>          <td align="center">59</td>   <td>$a0 = address of null-terminated string that is an information-type message to user<br>$a1 = address of null-terminated string to display after the first string</td>  <td>N/A</td></tr>
+</table>
+<br>
+<b>NOTES: Services numbered 30 and higher are not provided by SPIM</b>
+<br><b>Service 8</b> - Follows semantics of UNIX 'fgets'.  For specified length n, string can be no longer than n-1. If less than that, adds newline to end.  In either case, then pads with null byte  If n = 1, input is ignored and null byte placed at buffer address. If n < 1, input is ignored and nothing is written to the buffer.
+<br><b>Service 11</b> - Prints ASCII character corresponding to contents of low-order byte.
+<br><b>Service 13</b> - MARS implements three flag values: 0 for read-only, 1 for write-only with create, and 9 for write-only with create and append.  It ignores mode.  The returned file descriptor will be negative if the operation failed.  The underlying file I/O
+implementation uses <tt>java.io.FileInputStream.read()</tt> to read and <tt>java.io.FileOutputStream.write()</tt> to write.  MARS maintains file descriptors internally and allocates them starting with 3.  File descriptors 0, 1 and 2 are
+always open for: reading from standard input, writing to standard output, and writing to standard error, respectively (new in release 4.3).
+<br><b>Services 13,14,15</b> - In MARS 3.7, the result register was changed to $v0 for SPIM compatability.  It was previously $a0 as erroneously printed
+in Appendix B of <i>Computer Organization and Design,</i>.
+<br><b>Service 17</b> - If the MIPS program is run under control of the MARS graphical interface (GUI), the exit code in $a0 is ignored.
+<br><b>Service 30</b> - System time comes from <tt>java.util.Date.getTime()</tt> as milliseconds since 1 January 1970.
+<br><b>Services 31,33</b> - Simulate MIDI output through sound card.  Details below.
+<br><b>Services 40-44</b> use underlying Java pseudorandom number generators provided by the <tt>java.util.Random</tt> class.  Each stream (identified
+by $a0 contents) is modeled by a different <tt>Random</tt> object.  There are no default seed values, so use the Set Seed service (40) if 
+replicated random sequences are desired.
+
+
+
+<p></p>
+<hr>
+<h3>Example of File I/O</h3>
+The sample MIPS program below will open a new file for writing, write text to it from a memory buffer, then close it.  The file will be created in the
+directory in which MARS was run.
+<p>
+<pre>
+# Sample MIPS program that writes to a new file.
+#   by Kenneth Vollmar and Pete Sanderson
+
+        .data
+fout:   .asciiz "testout.txt"      # filename for output
+buffer: .asciiz "The quick brown fox jumps over the lazy dog."
+        .text
+  ###############################################################
+  # Open (for writing) a file that does not exist
+  li   $v0, 13       # system call for open file
+  la   $a0, fout     # output file name
+  li   $a1, 1        # Open for writing (flags are 0: read, 1: write)
+  li   $a2, 0        # mode is ignored
+  syscall            # open a file (file descriptor returned in $v0)
+  move $s6, $v0      # save the file descriptor 
+  ###############################################################
+  # Write to file just opened
+  li   $v0, 15       # system call for write to file
+  move $a0, $s6      # file descriptor 
+  la   $a1, buffer   # address of buffer from which to write
+  li   $a2, 44       # hardcoded buffer length
+  syscall            # write to file
+  ###############################################################
+  # Close the file 
+  li   $v0, 16       # system call for close file
+  move $a0, $s6      # file descriptor to close
+  syscall            # close file
+  ###############################################################
+</pre>
+<p></p>
+<hr>
+
+<h3>Using SYSCALL system services 31 and 33: MIDI output</h3>
+These system services are unique to MARS, and provide a means of producing sound.  MIDI output is
+simulated by your system sound card, and the simulation is provided by the <tt>javax.sound.midi</tt>
+package.  
+<p>Service 31 will generate the tone then immediately return.  Service 33 will generate the tone then
+sleep for the tone's duration before returning.  Thus it essentially combines services 31 and 32.
+<p>
+This service requires four parameters as follows:
+
+<table width="600" border="0" align="center" cellpadding="2">
+  <tr>
+    <td><h3>pitch ($a0)</h3>
+        
+      <li>Accepts a positive byte value (0-127) that denotes a pitch as it would 
+        be represented in MIDI </li>
+        
+      <li>Each number is one semitone / half-step in the chromatic scale.</li>
+        
+      <li>0 represents a very low C and 127 represents a very high G (a standard 
+        88 key piano begins at 9-A and ends at 108-C).</li>
+      <li>If the parameter value is outside this range, it applies a default value 60 which is the same as middle C on a piano.</li>
+        
+      <li>From middle C, all other pitches in the octave are as follows:</li>
+      
+        
+      <table width="450" border="0" align="center" cellpadding="2">
+        <tr>
+            <td>
+        	 <li>61 = C# or Db</li>
+        	 <li>62 = D</li>
+        	 <li>63 = D# or Eb</li>
+        	 <li>64 = E or Fb</li>
+			</td>
+            <td>
+        	 <li>65 = E# or F</li>
+        	 <li>66 = F# or Gb</li>
+        	 <li>67 = G</li>
+        	 <li>68 = G# or Ab</li>
+			</td>
+            <td>
+			 <li>69 = A</li>
+        	 <li>70 = A# or Bb</li>
+        	 <li>71 = B or Cb</li>
+        	 <li>72 = B# or C</li>
+			</td>
+          </tr>
+        </table>
+        
+        
+      <li>To produce these pitches in other octaves, add or subtract multiples 
+        of 12.</li>
+      <br>
+      </td>
+  </tr>
+  <tr>
+    <td><h3>duration in milliseconds ($a1)</h3>
+      <li>Accepts a positive integer value that is the length of the tone in milliseconds.</li>
+      <li>If the parameter value is negative, it applies a default value of one second (1000 milliseconds).</li>
+      <br>
+    </td>
+  </tr>
+  <tr>
+    <td><h3>instrument ($a2)</h3>
+	  <li>Accepts a positive byte value (0-127) that denotes the General MIDI 
+        &quot;patch&quot; used to play the tone.</li>
+      <li>If the parameter is outside this range, it applies a default value 0 which is an <em>Acoustic Grand Piano</em>.</li>
+      <li>General MIDI standardizes the number associated with each possible instrument 
+        (often referred to as <em>program change</em> numbers), however it does 
+        not determine how the tone will sound. This is determined by the synthesizer 
+        that is producing the sound. Thus a<em> Tuba</em> (patch 58) on one computer 
+        may sound different than that same patch on another computer.</li>
+      <li>The 128 available patches are divided into instrument families of 8:</li>
+	  <table width="450" border="0" align="center" cellpadding="2">
+        <tr> 
+          <td width="60">0-7</td>
+          <td width="160">Piano</td>
+          <td width="60">64-71</td>
+          <td>Reed</td>
+        </tr>
+        <tr> 
+          <td width="60">8-15</td>
+          <td width="160">Chromatic Percussion</td>
+          <td width="60">72-79</td>
+          <td>Pipe</td>
+        </tr>
+        <tr> 
+          <td width="60">16-23</td>
+          <td width="160">Organ</td>
+          <td width="60">80-87</td>
+          <td>Synth Lead</td>
+        </tr>
+        <tr> 
+          <td width="60">24-31</td>
+          <td width="160">Guitar</td>
+          <td width="60">88-95</td>
+          <td>Synth Pad</td>
+        </tr>
+        <tr> 
+          <td width="60">32-39</td>
+          <td width="160">Bass</td>
+          <td width="60">96-103</td>
+          <td>Synth Effects</td>
+        </tr>
+        <tr> 
+          <td width="60">40-47</td>
+          <td width="160">Strings</td>
+          <td width="60">104-111</td>
+          <td>Ethnic</td>
+        </tr>
+        <tr> 
+          <td width="60">48-55</td>
+          <td width="160">Ensemble</td>
+          <td width="60">112-119</td>
+          <td>Percussion</td>
+        </tr>
+        <tr> 
+          <td width="60">56-63</td>
+          <td width="160">Brass</td>
+          <td width="60">120-127</td>
+          <td>Sound Effects</td>
+        </tr>
+      </table>
+      <li>Note that outside of Java, General MIDI usually refers to patches 1-128. 
+        When referring to a list of General MIDI patches, 1 must be subtracted 
+        to play the correct patch. For a full list of General MIDI instruments, 
+        see <a href="http://www.midi.org/">
+        www.midi.org/about-midi/gm/gm1sound.shtml</a>. 
+        The General MIDI channel 10 percussion key map is not relevant to the 
+        toneGenerator method because it always defaults to MIDI channel 1.</li>
+		<br>
+      </td>
+  </tr>
+  <tr>
+    <td><h3>volume ($a3)</h3>
+      <li>Accepts a positive byte value (0-127) where 127 is the loudest and 0 
+        is silent. This value denotes MIDI velocity which refers to the initial 
+        attack of the tone.</li>
+      <li>If the parameter value is outside this range, it applies a default value 100.</li>
+      <li>MIDI velocity measures how hard a <em>note on</em> (or <em>note off</em>) 
+        message is played, perhaps on a MIDI controller like a keyboard. Most 
+        MIDI synthesizers will translate this into volume on a logarithmic scale 
+        in which the difference in amplitude decreases as the velocity value increases.</li>
+      <li>Note that velocity value on more sophisticated synthesizers can also 
+        affect the timbre of the tone (as most instruments sound different when 
+        they are played louder or softer).</li>
+      </td>
+  </tr>
+</table>
+System service 31 was developed and documented by Otterbein student Tony Brock in July 2007.
+
+
+
+
+<center>
+  <h3 _msthash="346333" _msttexthash="36837801">&#22312;&#28779;&#26143;&#20013;&#21487;&#29992;&#30340; SYSCALL &#20989;&#25968;</h3>
+</center>
+
+<h3 _msthash="127153" _msttexthash="5211505">&#20171;&#32461;</h3>
+<p _msthash="117637" _msttexthash="300722786">MIPS &#31243;&#24207;&#21487;&#20197;&#20351;&#29992;&#35768;&#22810;&#31995;&#32479;&#26381;&#21153;&#65288;&#20027;&#35201;&#29992;&#20110;&#36755;&#20837;&#21644;&#36755;&#20986;&#65289;&#12290;&#19979;&#34920;&#20171;&#32461;&#20102;&#23427;&#20204;&#12290;</p>
+<p _msthash="117845" _msttexthash="254549074">MIPS &#23492;&#23384;&#22120;&#20869;&#23481;&#19981;&#21463;&#31995;&#32479;&#35843;&#29992;&#30340;&#24433;&#21709;&#65292;&#19979;&#34920;&#20013;&#25351;&#23450;&#30340;&#32467;&#26524;&#23492;&#23384;&#22120;&#38500;&#22806;&#12290;</p>
+<h3 _msthash="127816" _msttexthash="38717562">&#22914;&#20309;&#20351;&#29992; SYSCALL &#31995;&#32479;&#26381;&#21153;</h3><font _mstmutation="1" _msthash="61815" _msttexthash="1790874527">&#31532; 1 &#27493;&#12290;&#23558;&#26381;&#21153;&#32534;&#21495;&#21152;&#36733;&#21040;&#23492;&#23384;&#22120;$v 0&#12290;<br _mstmutation="1" _istranslated="1">&#31532; 2 &#27493;&#12290;&#21152;&#36733;&#21442;&#25968;&#20540;&#65288;&#22914;&#26524;&#26377;&#65289;&#20013;$a 0&#12289;$a 1&#12289;$a 2 &#25110; $f 12 &#20013;&#12290;<br _mstmutation="1" _istranslated="1">&#31532; 3 &#27493;&#12290;&#21457;&#20986; SYSCALL &#25351;&#20196;&#12290;<br _mstmutation="1" _istranslated="1">&#31532; 4 &#27493;&#12290;&#20174;&#25351;&#23450;&#30340;&#32467;&#26524;&#23492;&#23384;&#22120;&#20013;&#26816;&#32034;&#36820;&#22238;&#20540;&#65288;&#22914;&#26524;&#26377;&#65289;&#12290;<br _mstmutation="1" _istranslated="1"><strong _mstmutation="1" _istranslated="1">&#31034;&#20363;&#65306;&#22312;&#25511;&#21046;&#21488;&#19978;&#26174;&#31034;$t 0 &#20013;&#23384;&#20648;&#30340;&#20540;</strong></font><p></p><br>
+<pre>    li  $v0, 1           # service 1 is print integer
+    add $a0, $t0, $zero  # load desired value into argument register $a0, using pseudo-op
+    syscall
+</pre>
+<h3 _msthash="140270" _msttexthash="15904512">&#21487;&#29992;&#26381;&#21153;&#34920;</h3>
+
+<table border="1">
+  <tbody><tr>  <th _msthash="828984" _msttexthash="4600583">&#26381;&#21153;</th>  <th _msthash="829491" _msttexthash="5059145">&#20195;&#30721;$v 0</th>  <th _msthash="829998" _msttexthash="4651894">&#21442;&#25968;</th>  <th _msthash="830505" _msttexthash="5712993">&#32467;&#26524;</th>  </tr>
+  <tr><td _msthash="826995" _msttexthash="10926565">&#25171;&#21360;&#25972;&#25968;</td>                 <td align="center" _msthash="827502" _msttexthash="4459">1</td>   <td _msthash="828009" _msttexthash="28584933">$a 0 = &#35201;&#25171;&#21360;&#30340;&#25972;&#25968;</td>  <td>&nbsp;</td></tr>
+  <tr><td _msthash="827437" _msttexthash="10828519">&#25171;&#21360;&#28014;&#23376;</td>                   <td align="center" _msthash="827944" _msttexthash="4550">2</td>   <td _msthash="828451" _msttexthash="16727386">$f 12 = &#28014;&#21160;&#25171;&#21360;</td>   <td>&nbsp;</td></tr>
+  <tr><td _msthash="827879" _msttexthash="7021885">&#25171;&#21360;&#21452;</td>                  <td align="center" _msthash="828386" _msttexthash="4641">3</td>   <td _msthash="828893" _msttexthash="15471755">$f 12 = &#25171;&#21360;&#21452;&#20493;</td>  <td>&nbsp;</td></tr>
+  <tr><td _msthash="828321" _msttexthash="14208766">&#25171;&#21360;&#23383;&#31526;&#20018;</td>                  <td align="center" _msthash="828828" _msttexthash="4732">4</td>   <td _msthash="829335" _msttexthash="76867245">$a 0 = &#35201;&#25171;&#21360;&#30340;&#31354;&#32456;&#27490;&#23383;&#31526;&#20018;&#30340;&#22320;&#22336;</td>  <td>&nbsp;</td></tr>
+  <tr><td _msthash="828763" _msttexthash="11907597">&#35835;&#21462;&#25972;&#25968;</td>                  <td align="center" _msthash="829270" _msttexthash="4823">5</td>   <td>&nbsp;</td>  <td _msthash="830284" _msttexthash="25012559">$v 0 &#21253;&#21547;&#25972;&#25968;&#35835;&#21462;</td></tr>
+  <tr><td _msthash="829205" _msttexthash="11521471">&#35835;&#21462;&#28014;&#21160;</td>                    <td align="center" _msthash="829712" _msttexthash="4914">6</td>   <td>&nbsp;</td>  <td _msthash="830726" _msttexthash="24516895">$f 0 &#21253;&#21547;&#28014;&#21160;&#35835;&#21462;</td></tr>
+  <tr><td _msthash="829647" _msttexthash="8002917">&#35835;&#21462;&#21452;</td>                   <td align="center" _msthash="830154" _msttexthash="5005">7</td>   <td>&nbsp;</td>  <td _msthash="831168" _msttexthash="26225108">$f 0 &#21253;&#21547;&#21452;&#37325;&#35835;&#21462;</td></tr>
+  <tr><td _msthash="830089" _msttexthash="15189798">&#35835;&#21462;&#23383;&#31526;&#20018;</td>                   <td align="center" _msthash="830596" _msttexthash="5096">8</td>   <td _msthash="831103" _msttexthash="126601267">$a 0 = &#36755;&#20837;&#32531;&#20914;&#21306;&#30340;&#22320;&#22336;<br _istranslated="1">$a 1 = &#35201;&#35835;&#21462;&#30340;&#26368;&#22823;&#23383;&#31526;&#25968;</td>  <td><i _msthash="831610" _msttexthash="33812168">&#35831;&#21442;&#38405;&#19979;&#34920;&#30340;&#27880;&#37322;</i></td></tr>
+  <tr><td _msthash="830531" _msttexthash="46409454">sbrk&#65288;&#20998;&#37197;&#22534;&#20869;&#23384;&#65289;</td>   <td align="center" _msthash="831038" _msttexthash="5187">9</td>   <td _msthash="831545" _msttexthash="37392407">$a 0 = &#35201;&#20998;&#37197;&#30340;&#23383;&#33410;&#25968;</td>  <td _msthash="832052" _msttexthash="46313930">$v 0 &#21253;&#21547;&#24050;&#20998;&#37197;&#20869;&#23384;&#30340;&#22320;&#22336;</td></tr>
+  <tr><td _msthash="854087" _msttexthash="43035356">&#36864;&#20986;&#65288;&#32456;&#27490;&#25191;&#34892;&#65289;</td>   <td align="center" _msthash="854607" _msttexthash="9451">10</td>   <td>&nbsp;</td>  <td>&nbsp;</td></tr>
+  <tr><td _msthash="854542" _msttexthash="11346192">&#25171;&#21360;&#23383;&#31526;</td>              <td align="center" _msthash="855062" _msttexthash="9555">11</td>   <td _msthash="855582" _msttexthash="29236142">$a 0 = &#35201;&#25171;&#21360;&#30340;&#23383;&#31526;</td>  <td><i _msthash="856102" _msttexthash="33812168">&#35831;&#21442;&#38405;&#19979;&#34920;&#30340;&#27880;&#37322;</i></td></tr>
+  <tr><td _msthash="854997" _msttexthash="12327224">&#35835;&#21462;&#23383;&#31526;</td>               <td align="center" _msthash="855517" _msttexthash="9659">12</td>   <td>&nbsp;</td>  <td _msthash="856557" _msttexthash="25547977">$v 0 &#21253;&#21547;&#23383;&#31526;&#35835;&#21462;</td></tr>
+  <tr><td _msthash="855452" _msttexthash="10488608">&#25171;&#24320;&#25991;&#20214;</td>                    <td align="center" _msthash="855972" _msttexthash="9763">13</td>   <td _msthash="856492" _msttexthash="134912791">$a 0 = &#21253;&#21547;&#25991;&#20214;&#21517;&#30340;&#31354;&#32456;&#27490;&#23383;&#31526;&#20018;&#30340;&#22320;&#22336;<br _istranslated="1">$a 1 = &#26631;&#24535;<br _istranslated="1">$a 2 = &#27169;&#24335;</td>  <td _msthash="857012" _msttexthash="289351673">$v 0 &#21253;&#21547;&#25991;&#20214;&#25551;&#36848;&#31526;&#65288;&#22914;&#26524;&#20986;&#29616;&#38169;&#35823;&#65292;&#21017;&#20026;&#36127;&#25968;&#65289;&#12290;<i _istranslated="1">&#35831;&#21442;&#38405;&#19979;&#34920;&#30340;&#27880;&#37322;</i></td></tr>
+  <tr><td _msthash="855907" _msttexthash="14631552">&#20174;&#25991;&#20214;&#35835;&#21462;</td>               <td align="center" _msthash="856427" _msttexthash="9867">14</td>   <td _msthash="856947" _msttexthash="204576333">$a 0 = &#25991;&#20214;&#25551;&#36848;&#31526;<br _istranslated="1">$a 1 = &#36755;&#20837;&#32531;&#20914;&#21306;<br _istranslated="1">&#30340;&#22320;&#22336; $a 2 = &#35201;&#35835;&#21462;&#30340;&#26368;&#22823;&#23383;&#31526;&#25968;</td>  <td _msthash="857467" _msttexthash="355418115">$v 0 &#21253;&#21547;&#35835;&#21462;&#30340;&#23383;&#31526;&#25968;&#65288;&#22914;&#26524;&#25991;&#20214;&#26411;&#23614;&#20026; 0&#65292;&#22914;&#26524;&#38169;&#35823;&#20026;&#36127;&#65289;&#12290;<i _istranslated="1">&#35831;&#21442;&#38405;&#19979;&#34920;&#30340;&#27880;&#37322;</i></td></tr>
+  <tr><td _msthash="856362" _msttexthash="9736714">&#20889;&#20837;&#25991;&#20214;</td>                <td align="center" _msthash="856882" _msttexthash="9971">15</td>   <td _msthash="857402" _msttexthash="172508037">$a 0 = &#25991;&#20214;&#25551;&#36848;<br _istranslated="1">&#31526; $a 1 = &#36755;&#20986;&#32531;&#20914;&#21306;&#30340;&#22320;&#22336;<br _istranslated="1">$a 2 = &#35201;&#20889;&#20837;&#30340;&#23383;&#31526;&#25968;</td>  <td _msthash="857922" _msttexthash="249956941">$v 0 &#21253;&#21547;&#20889;&#20837;&#30340;&#23383;&#31526;&#25968;&#65288;&#22914;&#26524;&#20986;&#29616;&#38169;&#35823;&#20026;&#36127;&#65289;&#12290;<i _istranslated="1">&#35831;&#21442;&#38405;&#19979;&#34920;&#30340;&#27880;&#37322;</i></td></tr>
+  <tr><td _msthash="856817" _msttexthash="11557832">&#20851;&#38381;&#25991;&#20214;</td>                   <td align="center" _msthash="857337" _msttexthash="10075">16</td>   <td _msthash="857857" _msttexthash="24069032">$a 0 = &#25991;&#20214;&#25551;&#36848;&#31526;</td>  <td>&nbsp;</td></tr>
+  <tr><td _msthash="857272" _msttexthash="43327037">exit2&#65288;&#32456;&#27490;&#19982;&#20540;&#65289;</td> <td align="center" _msthash="857792" _msttexthash="10179">17</td>   <td _msthash="858312" _msttexthash="19270849">$a 0 = &#32456;&#27490;&#32467;&#26524;</td>  <td><i _msthash="858832" _msttexthash="33812168">&#35831;&#21442;&#38405;&#19979;&#34920;&#30340;&#27880;&#37322;</i></td></tr>
+  <tr><td align="center" colspan="4"><em _msthash="857727" _msttexthash="563944862">&#26381;&#21153; 1 &#21040; 17 &#19982; SPIM &#27169;&#25311;&#22120;&#20860;&#23481;&#65292;&#20294;&#19979;&#34920;&#19979;&#34920;&#20013;&#30340;&#27880;&#37322;&#20013;&#25152;&#36848;&#30340;"&#25171;&#24320;&#25991;&#20214; &#65288;13&#65289;"&#12290;&#26381;&#21153; 30 &#21450;&#26356;&#39640;&#29256;&#26412;&#26159; MARS &#29420;&#26377;&#30340;&#12290;</em></td></tr>
+  <tr><td _msthash="858182" _msttexthash="45252259">&#26102;&#38388;&#65288;&#31995;&#32479;&#26102;&#38388;&#65289;</td>           <td align="center" _msthash="858702" _msttexthash="9633">30</td>   <td>&nbsp;</td><td _msthash="859222" _msttexthash="251375319">$a 0 = &#20302;&#38454; 32 &#20301;<br _istranslated="1">&#31995;&#32479;&#26102;&#38388; $a 1 = &#39640;&#38454; 32 &#20301;&#31995;&#32479;&#26102;&#38388;&#12290;<i _istranslated="1">&#35831;&#21442;&#38405;&#19979;&#34920;&#30340;&#27880;&#37322;</i></td></tr>
+  <tr><td _msthash="854529" _msttexthash="9186099">&#31859;&#36842;&#20986;</td>                     <td align="center" _msthash="855049" _msttexthash="9737">31</td>   <td _msthash="855569" _msttexthash="351578409">$a 0 = &#38388;&#36317; &#65288;0-127&#65289;<br _istranslated="1">$a 1 = &#25345;&#32493;&#26102;&#38388;<br _istranslated="1">&#65288;&#27627;&#31186; $a 2 = &#20202;&#22120; &#65288;0-127&#65289;<br _istranslated="1">$a 3 = &#38899;&#37327; &#65288;0-127&#65289;</td>  <td _msthash="856089" _msttexthash="105923883">&#29983;&#25104;&#38899;&#35843;&#24182;&#31435;&#21363;&#36820;&#22238;&#12290;<i _istranslated="1">&#35831;&#21442;&#38405;&#19979;&#34920;&#30340;&#27880;&#37322;</i></td></tr>
+  <tr><td _msthash="854984" _msttexthash="5952635">&#30561;&#30496;</td>                        <td align="center" _msthash="855504" _msttexthash="9841">32</td>   <td _msthash="856024" _msttexthash="109144776">$a 0 = &#30561;&#30496;&#26102;&#38388;&#38271;&#24230;&#65288;&#20197;&#27627;&#31186;&#20026;&#21333;&#20301;&#65289;&#12290;</td>  <td _msthash="856544" _msttexthash="417484717">&#20351; MARS Java &#32447;&#31243;&#30561;&#30496;&#65288;&#33267;&#23569;&#65289;&#25351;&#23450;&#27627;&#31186;&#25968;&#12290;&#27492;&#35745;&#26102;&#24182;&#19981;&#31934;&#30830;&#65292;&#22240;&#20026; Java &#23454;&#29616;&#23558;&#22686;&#21152;&#19968;&#20123;&#24320;&#38144;&#12290;</td></tr>
+  <tr><td _msthash="855439" _msttexthash="11047088">Midi &#20986;&#21516;&#27493;</td><td align="center" _msthash="855440" _msttexthash="9945">33</td>   <td _msthash="855959" _msttexthash="351578409">$a 0 = &#38388;&#36317; &#65288;0-127&#65289;<br _istranslated="1">$a 1 = &#25345;&#32493;&#26102;&#38388;<br _istranslated="1">&#65288;&#27627;&#31186; $a 2 = &#20202;&#22120; &#65288;0-127&#65289;<br _istranslated="1">$a 3 = &#38899;&#37327; &#65288;0-127&#65289;</td>  <td _msthash="856479" _msttexthash="134435340">&#29983;&#25104;&#38899;&#35843;&#24182;&#22312;&#38899;&#23436;&#25104;&#26102;&#36820;&#22238;&#12290;<i _istranslated="1">&#35831;&#21442;&#38405;&#19979;&#34920;&#30340;&#27880;&#37322;</i></td></tr>
+  <tr><td _msthash="855894" _msttexthash="31341141">&#21313;&#20845;&#36827;&#21046;&#20013;&#25171;&#21360;&#25972;&#25968;</td> <td align="center" _msthash="856414" _msttexthash="10049">34</td>   <td _msthash="856934" _msttexthash="28584933">$a 0 = &#35201;&#25171;&#21360;&#30340;&#25972;&#25968;</td>  <td _msthash="857454" _msttexthash="160521959">&#26174;&#31034;&#20540;&#20026; 8 &#20010;&#21313;&#20845;&#36827;&#21046;&#25968;&#23383;&#65292;&#22914;&#26377;&#24517;&#35201;&#65292;&#24038;&#22635;&#20805;&#20026;&#38646;&#12290;</td></tr>
+  <tr><td _msthash="856349" _msttexthash="36869235">&#20197;&#20108;&#36827;&#21046;&#24418;&#24335;&#25171;&#21360;&#25972;&#25968;</td>      <td align="center" _msthash="856869" _msttexthash="10153">35</td>   <td _msthash="857389" _msttexthash="28584933">$a 0 = &#35201;&#25171;&#21360;&#30340;&#25972;&#25968;</td>  <td _msthash="857909" _msttexthash="106101138">&#26174;&#31034;&#20540;&#20026; 32 &#20301;&#65292;&#22914;&#26377;&#24517;&#35201;&#65292;&#24038;&#22635;&#20805;&#20026;&#38646;&#12290;</td></tr>
+  <tr><td _msthash="856804" _msttexthash="31670665">&#23558;&#25972;&#25968;&#25171;&#21360;&#20026;&#26080;&#31526;&#21495;</td>    <td align="center" _msthash="857324" _msttexthash="10257">36</td>   <td _msthash="857844" _msttexthash="28584933">$a 0 = &#35201;&#25171;&#21360;&#30340;&#25972;&#25968;</td>  <td _msthash="858364" _msttexthash="40731990">&#26174;&#31034;&#20026;&#26410;&#31614;&#21517;&#30340;&#23567;&#25968;&#20540;&#12290;</td></tr>
+  <tr><td align="center" _msthash="857259" _msttexthash="24304202">&#65288;&#26410;&#20351;&#29992;&#65289;</td>    <td align="center" _msthash="857779" _msttexthash="30407">37-39</td><td>&nbsp;</td>  <td>&nbsp;</td></tr>
+  <tr><td _msthash="857714" _msttexthash="13335179">&#35774;&#32622;&#31181;&#23376;</td>                     <td align="center" _msthash="858234" _msttexthash="9724">40</td>   <td _msthash="858754" _msttexthash="254401251">$a 0 = &#21363;&#20266;&#38543;&#26426;&#25968;&#29983;&#25104;&#22120;&#65288;&#20219;&#20309; int&#65289;&#12290;<br _istranslated="1"> </br>$a 1 = &#30456;&#24212;&#20266;&#38543;&#26426;&#25968;&#29983;&#25104;&#22120;&#30340;&#31181;&#23376;&#12290;</td>  <td _msthash="859274" _msttexthash="434752175">&#19981;&#36820;&#22238;&#20219;&#20309;&#20540;&#12290;&#35774;&#32622;&#30456;&#24212;&#22522;&#30784; Java &#20266;&#38543;&#26426;&#25968;&#29983;&#25104;&#22120;<tt _istranslated="1">&#65288;java.util.Random&#65289; &#30340;&#31181;&#23376;</tt>&#12290;<i _istranslated="1">&#35831;&#21442;&#38405;&#19979;&#34920;&#30340;&#27880;&#37322;</i></td></tr>
+  <tr><td _msthash="858169" _msttexthash="6298890">&#38543;&#26426; int</td>                   <td align="center" _msthash="858689" _msttexthash="9828">41</td>   <td _msthash="859209" _msttexthash="91990392">$a 0 = &#21363;&#20266;&#38543;&#26426;&#25968;&#29983;&#25104;&#22120;&#65288;&#20219;&#20309; int&#65289;&#12290;</td>  <td _msthash="859729" _msttexthash="340082444">$a 0 &#21253;&#21547;&#19979;&#19968;&#20010;&#20266;&#38543;&#26426;&#65292;&#20174;&#36825;&#20010;&#38543;&#26426;&#25968;&#29983;&#25104;&#22120;&#24207;&#21015;&#20013;&#22343;&#21248;&#20998;&#24067; int &#20540;&#12290;<i _istranslated="1">&#35831;&#21442;&#38405;&#19979;&#34920;&#30340;&#27880;&#37322;</i></td></tr>
+  <tr><td _msthash="858624" _msttexthash="15292914">&#38543;&#26426; int &#33539;&#22260;</td>             <td align="center" _msthash="859144" _msttexthash="9932">42</td>   <td _msthash="859664" _msttexthash="198982953">$a 0 = &#21363;&#20266;&#38543;&#26426;&#25968;&#29983;&#25104;&#22120;&#65288;&#20219;&#20309; int&#65289;&#12290;<br _istranslated="1"> </br>$a 1 = &#36820;&#22238;&#20540;&#33539;&#22260;&#30340;&#19978;&#38480;&#12290;</td>  <td _msthash="860184" _msttexthash="480389390">$a 0 &#21253;&#21547;&#20174;&#27492;&#38543;&#26426;&#25968;&#29983;&#25104;&#22120;&#24207;&#21015;&#20013;&#24471;&#20986;&#30340;&#20266;&#38543;&#26426;&#65292;&#22343;&#21248;&#20998;&#24067;&#30340; int &#20540;&#33539;&#22260;&#20026; 0 &lt;[ int] &lt; [&#19978;&#38480;]&#12290;<i _istranslated="1">&#35831;&#21442;&#38405;&#19979;&#34920;&#30340;&#27880;&#37322;</i></td></tr>
+  <tr><td _msthash="854971" _msttexthash="12284155">&#38543;&#26426;&#28014;&#21160;</td>                 <td align="center" _msthash="855491" _msttexthash="10036">43</td>   <td _msthash="856011" _msttexthash="91990392">$a 0 = &#21363;&#20266;&#38543;&#26426;&#25968;&#29983;&#25104;&#22120;&#65288;&#20219;&#20309; int&#65289;&#12290;</td>  <td _msthash="856531" _msttexthash="475103447">$f 0 &#21253;&#21547;&#19979;&#19968;&#20010;&#20266;&#38543;&#26426;&#12289;&#22343;&#21248;&#20998;&#24067;&#30340;&#28014;&#28857;&#20540;&#65292;&#33539;&#22260;&#20174;&#36825;&#20010;&#38543;&#26426;&#25968;&#29983;&#25104;&#22120;&#24207;&#21015;&#30340; 0.0 &lt;= f &lt; 1.0&#12290;<i _istranslated="1">&#35831;&#21442;&#38405;&#19979;&#34920;&#30340;&#27880;&#37322;</i></td></tr>
+  <tr><td _msthash="855426" _msttexthash="8765601">&#38543;&#26426;&#21452;</td>                <td align="center" _msthash="855946" _msttexthash="10140">44</td>   <td _msthash="856466" _msttexthash="91990392">$a 0 = &#21363;&#20266;&#38543;&#26426;&#25968;&#29983;&#25104;&#22120;&#65288;&#20219;&#20309; int&#65289;&#12290;</td>  <td _msthash="856986" _msttexthash="518713988">$f 0 &#21253;&#21547;&#19979;&#19968;&#20010;&#20266;&#38543;&#26426;&#65292;&#22343;&#21248;&#20998;&#24067;&#30340;&#21452;&#31934;&#24230;&#20540;&#65292;&#33539;&#22260;&#20174;&#36825;&#20010;&#38543;&#26426;&#25968;&#29983;&#25104;&#22120;&#24207;&#21015;&#20013;&#30340; 0.0 &lt;= f &lt; 1.0&#12290;<i _istranslated="1">&#35831;&#21442;&#38405;&#19979;&#34920;&#30340;&#27880;&#37322;</i></td></tr>
+  <tr><td align="center" _msthash="855881" _msttexthash="24304202">&#65288;&#26410;&#20351;&#29992;&#65289;</td>    <td align="center" _msthash="856401" _msttexthash="30420">45-49</td><td>&nbsp;</td>  <td>&nbsp;</td></tr>
+  <tr><td _msthash="856336" _msttexthash="14094054">&#30830;&#35748;&#35786;&#26029;</td>                <td align="center" _msthash="856856" _msttexthash="9815">50</td>   <td _msthash="857376" _msttexthash="175275750">$a 0 = &#31354;&#32456;&#27490;&#23383;&#31526;&#20018;&#30340;&#22320;&#22336;&#65292;&#35813;&#22320;&#22336;&#26159;&#21521;&#29992;&#25143;&#21457;&#36865;&#30340;&#28040;&#24687;</td>  <td _msthash="857896" _msttexthash="149604819">$a 0 &#21253;&#21547;&#29992;&#25143;&#36873;&#25321;&#36873;&#39033;<br _istranslated="1">0 &#30340;&#20540;&#65306; &#26159;<br _istranslated="1">1&#65306;<br _istranslated="1">&#21542; 2&#65306; &#21462;&#28040;</td></tr>
+  <tr><td _msthash="856791" _msttexthash="13082485">&#36755;&#20837;&#35786;&#26029;</td>               <td align="center" _msthash="857311" _msttexthash="9919">51</td>   <td _msthash="857831" _msttexthash="175275750">$a 0 = &#31354;&#32456;&#27490;&#23383;&#31526;&#20018;&#30340;&#22320;&#22336;&#65292;&#35813;&#22320;&#22336;&#26159;&#21521;&#29992;&#25143;&#21457;&#36865;&#30340;&#28040;&#24687;</td>  <td _msthash="858351" _msttexthash="891026786">$a 0 &#21253;&#21547; int<br _istranslated="1">&#35835;&#21462; $a 1 &#21253;&#21547;<br _istranslated="1">&#29366;&#24577;&#20540; 0&#65306;&#30830;&#23450;&#29366;&#24577;<br _istranslated="1">-1&#65306;&#26080;&#27861;&#27491;&#30830;&#20998;&#26512;&#36755;&#20837;<br _istranslated="1">&#25968;&#25454; -2&#65306;&#24050;<br _istranslated="1">&#36873;&#25321;&#21462;&#28040; -3&#65306;&#24050;&#36873;&#25321;&#30830;&#23450;&#65292;&#20294;&#26410;&#36755;&#20837;&#21040;&#23383;&#27573;&#20013;&#26410;&#36755;&#20837;&#25968;&#25454;</td></tr>
+  <tr><td _msthash="857246" _msttexthash="20389447">&#36755;&#20837;&#35786;&#26029;&#28014;&#21160;</td>             <td align="center" _msthash="857766" _msttexthash="10023">52</td>   <td _msthash="858286" _msttexthash="175275750">$a 0 = &#31354;&#32456;&#27490;&#23383;&#31526;&#20018;&#30340;&#22320;&#22336;&#65292;&#35813;&#22320;&#22336;&#26159;&#21521;&#29992;&#25143;&#21457;&#36865;&#30340;&#28040;&#24687;</td>  <td _msthash="858806" _msttexthash="831098437">$f 0 &#21253;&#21547;&#28014;&#28857;<br _istranslated="1">&#35835;&#21462; $a 1 &#21253;&#21547;&#29366;&#24577;&#20540;<br _istranslated="1">0&#65306;&#30830;&#23450;<br _istranslated="1">&#29366;&#24577; -1&#65306;&#26080;&#27861;&#27491;&#30830;&#20998;&#26512;&#36755;&#20837;&#25968;&#25454;<br _istranslated="1">-2&#65306;&#24050;&#36873;&#25321;<br _istranslated="1">&#21462;&#28040; -3&#65306;&#24050;&#36873;&#25321;&#30830;&#23450;&#65292;&#20294;&#26410;&#36755;&#20837;&#21040;&#23383;&#27573;&#20013;&#30340;&#25968;&#25454;</td></tr>
+  <tr><td _msthash="857701" _msttexthash="16150121">&#36755;&#20837;&#35786;&#26029;&#21452;</td>            <td align="center" _msthash="858221" _msttexthash="10127">53</td>   <td _msthash="858741" _msttexthash="175275750">$a 0 = &#31354;&#32456;&#27490;&#23383;&#31526;&#20018;&#30340;&#22320;&#22336;&#65292;&#35813;&#22320;&#22336;&#26159;&#21521;&#29992;&#25143;&#21457;&#36865;&#30340;&#28040;&#24687;</td>  <td _msthash="859261" _msttexthash="920307947">$f 0 &#21253;&#21547;<br _istranslated="1">&#21452;&#37325;&#35835;&#21462; $a 1 &#21253;&#21547;&#29366;&#24577;<br _istranslated="1">&#20540; 0&#65306;&#30830;&#23450;&#29366;&#24577;<br _istranslated="1">-1&#65306;&#26080;&#27861;&#27491;&#30830;&#20998;&#26512;&#36755;&#20837;&#25968;&#25454;<br _istranslated="1">-2&#65306;&#24050;&#36873;&#25321;<br _istranslated="1">&#21462;&#28040; -3&#65306;&#24050;&#36873;&#25321;&#30830;&#23450;&#65292;&#20294;&#26410;&#36755;&#20837;&#21040;&#23383;&#27573;&#20013;&#26410;&#36755;&#20837;&#20219;&#20309;&#25968;&#25454;</td></tr>
+  <tr><td _msthash="858156" _msttexthash="13082485">&#36755;&#20837;&#35786;&#26029;</td>            <td align="center" _msthash="858676" _msttexthash="10231">54</td>   <td _msthash="859196" _msttexthash="457604823">$a 0 = &#31354;&#32456;&#27490;&#23383;&#31526;&#20018;&#30340;&#22320;&#22336;<br _istranslated="1">&#65292;&#35813;&#22320;&#22336;&#26159;&#21521;&#29992;&#25143;&#21457;&#36865;&#30340;&#28040;&#24687; $a 1 = &#36755;&#20837;&#32531;&#20914;&#21306;<br _istranslated="1">&#30340;&#22320;&#22336; $a 2 = &#35201;&#35835;&#21462;&#30340;&#26368;&#22823;&#23383;&#31526;&#25968;</td>  <td _msthash="859716" _msttexthash="2566400317"><i _istranslated="1">&#35831;&#21442;&#38405;&#19979;&#34920;&#19979;&#34920; 8 $a 1</i><br _istranslated="1">&#21253;&#21547;&#29366;&#24577;&#20540;<br _istranslated="1">0&#65306;&#30830;&#23450;&#29366;&#24577;&#12290;&#32531;&#20914;&#21306;&#21253;&#21547;&#36755;&#20837;&#23383;&#31526;&#20018;&#12290;<br _istranslated="1"> </br>-2&#65306; &#24050;&#36873;&#25321;&#21462;&#28040;&#12290;&#32531;&#20914;&#21306;&#27809;&#26377;&#26356;&#25913;&#12290;<br _istranslated="1"> </br>-3&#65306; &#24050;&#36873;&#25321;&#30830;&#23450;&#65292;&#20294;&#26410;&#36755;&#20837;&#21040;&#23383;&#27573;&#20013;&#30340;&#25968;&#25454;&#12290;&#32531;&#20914;&#21306;&#27809;&#26377;&#26356;&#25913;&#12290;<br _istranslated="1"> </br>-4&#65306;&#36755;&#20837;&#23383;&#31526;&#20018;&#30340;&#38271;&#24230;&#36229;&#36807;&#25351;&#23450;&#26368;&#22823;&#20540;&#12290;&#32531;&#20914;&#21306;&#21253;&#21547;&#26368;&#22823;&#20801;&#35768;&#30340;&#36755;&#20837;&#23383;&#31526;&#20018;&#21152;&#19978;&#32456;&#27490; null&#12290;</td></tr>
+  <tr><td _msthash="858611" _msttexthash="12689820">&#28040;&#24687;&#35786;&#26029;</td>                <td align="center" _msthash="859131" _msttexthash="10335">55</td>   <td><font _mstmutation="1" _msthash="859651" _msttexthash="2705839188">$a 0 = &#31354;&#32456;&#27490;&#23383;&#31526;&#20018;&#30340;&#22320;&#22336;$&#35813;&#22320;&#22336;&#26159;&#21521;&#29992;&#25143;<br _mstmutation="1" _istranslated="1">&#21457;&#36865;&#30340;&#28040;&#24687; $a 1 = &#35201;&#26174;&#31034;&#30340;&#28040;&#24687;&#31867;&#22411;&#65306;0&#65306;<br _mstmutation="1" _istranslated="1">&#38169;&#35823;&#28040;&#24687;&#65292;&#30001;&#38169;&#35823;&#22270;&#26631;<br _mstmutation="1" _istranslated="1">1&#65306;&#20449;&#24687;&#28040;&#24687;&#25351;&#31034;&#65292;&#30001;&#20449;&#24687;&#22270;&#26631;<br _mstmutation="1" _istranslated="1">2&#65306;&#35686;&#21578;&#28040;&#24687;&#25351;&#31034;&#65292;&#30001;&#35686;&#21578;&#22270;&#26631;<br _mstmutation="1" _istranslated="1">3&#65306; &#38382;&#39064;&#28040;&#24687;&#25351;&#31034;&#65292;<br _mstmutation="1" _istranslated="1">&#30001;&#38382;&#39064;&#22270;&#26631;&#25351;&#31034;&#20854;&#20182;&#65306;&#26222;&#36890;&#28040;&#24687;&#65288;&#26410;&#26174;&#31034;&#22270;&#26631;&#65289;</font><!-- <img src="SyscallMessageDialogError.gif"> --><!-- <img src="SyscallMessageDialogInformation.gif"> --><!-- <img src="SyscallMessageDialogWarning.gif"> --><!-- <img src="SyscallMessageDialogQuestion.gif"> --></td>  <td _msthash="860171" _msttexthash="4069247">&#19981;&#21644;</td></tr>
+  <tr><td _msthash="859066" _msttexthash="12689820">&#28040;&#24687;&#35786;&#26029;</td>             <td align="center" _msthash="859586" _msttexthash="10439">56</td>   <td _msthash="860106" _msttexthash="560112722">$a 0 = &#31354;&#32456;&#27490;&#23383;&#31526;&#20018;&#30340;&#22320;&#22336;&#65292;&#35813;&#22320;&#22336;&#26159;&#21521;&#29992;&#25143;<br _istranslated="1">&#21457;&#36865;&#30340;&#20449;&#24687;&#31867;&#22411;&#28040;&#24687; $a 1 = int &#20540;&#65292;&#22312;&#31532;&#19968;&#20010;&#23383;&#31526;&#20018;&#20043;&#21518;&#20197;&#23383;&#31526;&#20018;&#24418;&#24335;&#26174;&#31034;</td>  <td _msthash="860626" _msttexthash="4069247">&#19981;&#21644;</td></tr>
+  <tr><td _msthash="855413" _msttexthash="20409779">&#28040;&#24687;&#36842;&#20122;&#27931;&#28014;</td>           <td align="center" _msthash="855933" _msttexthash="10543">57</td>   <td _msthash="856453" _msttexthash="589733118">$a 0 = &#31354;&#32456;&#27490;&#23383;&#31526;&#20018;&#30340;&#22320;&#22336;&#65292;&#35813;&#22320;&#22336;&#26159;&#21521;&#29992;&#25143;<br _istranslated="1">&#21457;&#36865;&#30340;&#20449;&#24687;&#31867;&#22411;&#28040;&#24687; $f 12 = &#28014;&#28857;&#20540;&#65292;&#20197;&#23383;&#31526;&#20018;&#24418;&#24335;&#26174;&#31034;&#22312;&#31532;&#19968;&#20010;&#23383;&#31526;&#20018;&#20043;&#21518;</td>  <td _msthash="856973" _msttexthash="4069247">&#19981;&#21644;</td></tr>
+  <tr><td _msthash="855868" _msttexthash="15757456">&#28040;&#24687;&#35786;&#26029;&#21452;</td>          <td align="center" _msthash="856388" _msttexthash="10647">58</td>   <td _msthash="856908" _msttexthash="553513233">$a 0 = &#31354;&#32456;&#27490;&#23383;&#31526;&#20018;&#30340;&#22320;&#22336;&#65292;&#35813;&#22320;&#22336;&#26159;&#21521;&#29992;&#25143;<br _istranslated="1">&#21457;&#36865;&#30340;&#20449;&#24687;&#31867;&#22411;&#28040;&#24687; $f 12 = &#21452;&#20540;&#65292;&#20197;&#23383;&#31526;&#20018;&#24418;&#24335;&#26174;&#31034;&#21518;&#30340;&#31532;&#19968;&#20010;&#23383;&#31526;&#20018;</td>  <td _msthash="857428" _msttexthash="4069247">&#19981;&#21644;</td></tr>
+  <tr><td _msthash="856323" _msttexthash="12689820">&#28040;&#24687;&#35786;&#26029;</td>          <td align="center" _msthash="856843" _msttexthash="10751">59</td>   <td _msthash="857363" _msttexthash="624823043">$a 0 = &#31354;&#32456;&#27490;&#23383;&#31526;&#20018;&#30340;&#22320;&#22336;&#65292;&#35813;&#22320;&#22336;&#26159;&#21521;&#29992;&#25143;&#21457;&#36865;&#30340;&#20449;&#24687;&#31867;&#22411;&#28040;&#24687;<br _istranslated="1">$a 1 = &#31354;&#32456;&#27490;&#23383;&#31526;&#20018;&#30340;&#22320;&#22336;&#65292;&#35201;&#22312;&#31532;&#19968;&#20010;&#23383;&#31526;&#20018;&#20043;&#21518;&#26174;&#31034;</td>  <td _msthash="857883" _msttexthash="4069247">&#19981;&#21644;</td></tr>
+  </tbody></table>
+<br>
+<font _mstmutation="1" _msthash="61816" _msttexthash="59245034745"><b _mstmutation="1" _istranslated="1">&#27880;&#65306;&#32534;&#21495;&#20026; 30 &#21450;&#26356;&#39640;&#30340;&#26381;&#21153;&#19981;&#30001; SPIM</b> <br _mstmutation="1" _istranslated="1"> </br><b _mstmutation="1" _istranslated="1">&#26381;&#21153; 8</b>&#25552;&#20379; - &#36981;&#24490; UNIX"fgets"&#30340;&#35821;&#20041;&#12290;&#23545;&#20110;&#25351;&#23450;&#30340;&#38271;&#24230; n&#65292;&#23383;&#31526;&#20018;&#19981;&#33021;&#36229;&#36807; n-1&#12290;&#22914;&#26524;&#23567;&#20110;&#36825;&#19968;&#28857;&#65292;&#21017;&#28155;&#21152;&#26032;&#34892;&#20197;&#32467;&#26463;&#12290;&#22312;&#36825;&#20004;&#31181;&#24773;&#20917;&#19979;&#65292;&#28982;&#21518;&#29992;&#31354;&#23383;&#33410; Pad n = 1&#65292;&#36755;&#20837;&#23558;&#34987;&#24573;&#30053;&#65292;&#24182;&#25918;&#32622;&#22312;&#32531;&#20914;&#21306;&#22320;&#22336;&#30340;&#31354;&#23383;&#33410;&#12290;&#22914;&#26524; n &lt; 1&#65292;&#21017;&#24573;&#30053;&#36755;&#20837;&#65292;&#24182;&#19988;&#19981;&#21521;&#32531;&#20914;&#21306;&#20889;&#20837;&#20219;&#20309;&#20869;&#23481;&#12290;<br _mstmutation="1" _istranslated="1"><b _mstmutation="1" _istranslated="1">&#26381;&#21153; 11</b> - &#25171;&#21360;&#19982;&#20302;&#38454;&#23383;&#33410;&#20869;&#23481;&#23545;&#24212;&#30340; ASCII &#23383;&#31526;&#12290;<br _mstmutation="1" _istranslated="1"><b _mstmutation="1" _istranslated="1">&#26381;&#21153; 13</b> - MARS &#23454;&#29616;&#19977;&#20010;&#26631;&#24535;&#20540;&#65306;0 &#34920;&#31034;&#21482;&#35835;&#65292;1 &#34920;&#31034;&#20165;&#20889;&#20837;&#29992;&#20110;&#21019;&#24314;&#65292;9 &#34920;&#31034;&#20165;&#20889;&#20837;&#20540;&#65288;&#29992;&#20110;&#21019;&#24314;&#21644;&#36861;&#21152;&#65289;&#12290;&#23427;&#24573;&#30053;&#27169;&#24335;&#12290;&#22914;&#26524;&#25805;&#20316;&#22833;&#36133;&#65292;&#36820;&#22238;&#30340;&#25991;&#20214;&#25551;&#36848;&#31526;&#23558;&#20026;&#36127;&#12290;&#22522;&#30784;&#25991;&#20214; I/O &#23454;&#29616;&#20351;&#29992;<tt _mstmutation="1" _istranslated="1">java.io.FileInputStream.read.read&#65288;&#65289;</tt>&#35835;&#21462;<tt _mstmutation="1" _istranslated="1">&#21644; java.io.FileOutputStream.write&#65288;&#65289;</tt>&#20889;&#20837;&#12290;MARS &#22312;&#20869;&#37096;&#32500;&#25252;&#25991;&#20214;&#25551;&#36848;&#31526;&#65292;&#24182;&#23558;&#23427;&#20204;&#20174; 3 &#24320;&#22987;&#20998;&#37197;&#12290;&#25991;&#20214;&#25551;&#36848;&#31526; 0&#12289;1 &#21644; 2 &#22987;&#32456;&#25171;&#24320;&#65306;&#20998;&#21035;&#20174;&#26631;&#20934;&#36755;&#20837;&#35835;&#21462;&#12289;&#20889;&#20837;&#26631;&#20934;&#36755;&#20986;&#21644;&#20889;&#20837;&#26631;&#20934;&#38169;&#35823;&#65288;&#29256;&#26412; 4.3 &#20013;&#20026;&#26032;&#65289;&#12290;<br _mstmutation="1" _istranslated="1"><b _mstmutation="1" _istranslated="1">&#26381;&#21153; 13&#65292;14&#65292;15</b> - &#22312; MARS 3.7 &#20013;&#65292;&#32467;&#26524;&#23492;&#23384;&#22120;$v 0 &#30340; SPIM &#20860;&#23481;&#24615;&#12290;&#23427;&#20197;&#21069;$a&#22312;&#35745;&#31639;&#26426;&#32452;&#32455;&#21644;&#35774;&#35745;&#30340;<i _mstmutation="1" _istranslated="1">&#38468;&#24405;B&#20013;&#35823;&#21360;</i>&#12290;<br _mstmutation="1" _istranslated="1"><b _mstmutation="1" _istranslated="1">&#26381;&#21153; 17</b> - &#22914;&#26524; MIPS &#31243;&#24207;&#22312; MARS &#22270;&#24418;&#30028;&#38754; &#65288;GUI&#65289; &#30340;&#25511;&#21046;&#20043;&#19979;&#36816;&#34892;&#65292;&#21017;&#24573;&#30053; $a 0 &#20013;&#30340;&#36864;&#20986;&#20195;&#30721;&#12290;<br _mstmutation="1" _istranslated="1"><b _mstmutation="1" _istranslated="1">&#26381;&#21153; 30</b> - &#31995;&#32479;&#26102;&#38388;&#26469;&#33258;<tt _mstmutation="1" _istranslated="1">java.util.date.getTime&#65288;&#65289; &#33258;</tt>1970 &#24180; 1 &#26376; 1 &#26085;&#36215;&#20026;&#27627;&#31186;&#12290;<br _mstmutation="1" _istranslated="1"><b _mstmutation="1" _istranslated="1">&#26381;&#21153; 31&#65292;33</b> - &#36890;&#36807;&#22768;&#21345;&#27169;&#25311; MIDI &#36755;&#20986;&#12290;&#35814;&#24773;&#22914;&#19979;&#12290;<br _mstmutation="1" _istranslated="1"><b _mstmutation="1" _istranslated="1">&#26381;&#21153; 40- 44</b>&#20351;&#29992; java &#20266;&#38543;&#26426;&#25968;&#29983;&#25104;&#22120;&#65292; &#30001;<tt _mstmutation="1" _istranslated="1">java. util. random</tt>&#31867;&#25552;&#20379;&#12290;&#27599;&#20010;&#27969;&#65288;&#30001; $a 0 &#20869;&#23481;&#26631;&#35782;&#65289;&#30001;&#19981;&#21516;&#30340;<tt _mstmutation="1" _istranslated="1">Random</tt>&#23545;&#35937;&#24314;&#27169;&#12290;&#27809;&#26377;&#40664;&#35748;&#31181;&#23376;&#20540;&#65292;&#22240;&#27492;&#22914;&#26524;&#38656;&#35201;&#22797;&#21046;&#30340;&#38543;&#26426;&#24207;&#21015;&#65292;&#35831;&#20351;&#29992;"&#35774;&#32622;&#31181;&#23376;"&#26381;&#21153; &#65288;40&#65289;&#12290;</font><p></p>
+<hr>
+<h3 _msthash="140205" _msttexthash="12776036">&#25991;&#20214; I/O &#31034;&#20363;</h3><font _mstmutation="1" _msthash="61817" _msttexthash="635230388">&#19979;&#38754;&#30340;&#31034;&#20363; MIPS &#31243;&#24207;&#23558;&#25171;&#24320;&#19968;&#20010;&#26032;&#25991;&#20214;&#36827;&#34892;&#20889;&#20837;&#65292;&#20174;&#20869;&#23384;&#32531;&#20914;&#21306;&#20889;&#20837;&#25991;&#26412;&#65292;&#28982;&#21518;&#20851;&#38381;&#23427;&#12290;&#35813;&#25991;&#20214;&#23558;&#22312;&#36816;&#34892; MARS &#30340;&#30446;&#24405;&#20013;&#21019;&#24314;&#12290;</font><p>
+</p><pre># Sample MIPS program that writes to a new file.
+#   by Kenneth Vollmar and Pete Sanderson
+
+        .data
+fout:   .asciiz "testout.txt"      # filename for output
+buffer: .asciiz "The quick brown fox jumps over the lazy dog."
+        .text
+  ###############################################################
+  # Open (for writing) a file that does not exist
+  li   $v0, 13       # system call for open file
+  la   $a0, fout     # output file name
+  li   $a1, 1        # Open for writing (flags are 0: read, 1: write)
+  li   $a2, 0        # mode is ignored
+  syscall            # open a file (file descriptor returned in $v0)
+  move $s6, $v0      # save the file descriptor
+  ###############################################################
+  # Write to file just opened
+  li   $v0, 15       # system call for write to file
+  move $a0, $s6      # file descriptor
+  la   $a1, buffer   # address of buffer from which to write
+  li   $a2, 44       # hardcoded buffer length
+  syscall            # write to file
+  ###############################################################
+  # Close the file
+  li   $v0, 16       # system call for close file
+  move $a0, $s6      # file descriptor to close
+  syscall            # close file
+  ###############################################################
+</pre>
+<p></p>
+<hr>
+
+<h3 _msthash="141375" _msttexthash="80653274">&#20351;&#29992; SYSCALL &#31995;&#32479;&#26381;&#21153; 31 &#21644; 33&#65306;MIDI &#36755;&#20986;</h3><font _mstmutation="1" _msthash="61818" _msttexthash="552558916">&#36825;&#20123;&#31995;&#32479;&#26381;&#21153;&#26159; MARS &#29420;&#26377;&#65292;&#24182;&#25552;&#20379;&#19968;&#31181;&#20135;&#29983;&#22768;&#38899;&#30340;&#25163;&#27573;&#12290;MIDI &#36755;&#20986;&#30001;&#31995;&#32479;&#22768;&#21345;&#36827;&#34892;&#20223;&#30495;&#65292;&#20223;&#30495;&#30001;<tt _mstmutation="1" _istranslated="1">javax.sound.midi &#23553;&#35013;</tt>&#25552;&#20379;&#12290;</font><p _msthash="129519" _msttexthash="761757724">&#26381;&#21153; 31 &#23558;&#29983;&#25104;&#25552;&#31034;&#38899;&#65292;&#28982;&#21518;&#31435;&#21363;&#36820;&#22238;&#12290;&#26381;&#21153; 33 &#23558;&#29983;&#25104;&#38899;&#35843;&#65292;&#28982;&#21518;&#30561;&#30496;&#38899;&#30340;&#25345;&#32493;&#26102;&#38388;&#65292;&#28982;&#21518;&#20877;&#36820;&#22238;&#12290;&#22240;&#27492;&#65292;&#23427;&#22522;&#26412;&#19978;&#32467;&#21512;&#20102;&#26381;&#21153;31&#21644;32&#12290;</p><p><font _mstmutation="1" _msthash="129520" _msttexthash="57735691">&#27492;&#26381;&#21153;&#38656;&#35201;&#20197;&#19979;&#22235;&#20010;&#21442;&#25968;&#65306;</font><table width="600" border="0" align="center" cellpadding="2">
+  <tbody><tr>
+    <td><h3 _msthash="1211626" _msttexthash="26360945">&#38899;&#39640; &#65288;$a 0&#65289;</h3>
+
+      <li _msthash="1246882" _msttexthash="232721723">&#25509;&#21463;&#27491;&#23383;&#33410;&#20540; &#65288;0-127&#65289;&#65292;&#35813;&#20540;&#34920;&#31034;&#38388;&#36317;&#65292;&#22240;&#20026;&#23427;&#23558;&#22312; MIDI &#20013;&#34920;&#31034;</li>
+
+      <li _msthash="1247506" _msttexthash="74856561">&#27599;&#20010;&#25968;&#23383;&#22312;&#33394;&#38454;&#20013;&#26159;&#19968;&#20010;&#21322;&#38899;/&#21322;&#27493;&#12290;</li>
+
+      <li _msthash="1248130" _msttexthash="339307852">0 &#34920;&#31034;&#38750;&#24120;&#20302;&#30340; C&#65292;127 &#34920;&#31034;&#38750;&#24120;&#39640;&#30340; G&#65288;&#26631;&#20934; 88 &#38190;&#38050;&#29748;&#20174; 9-A &#24320;&#22987;&#65292;&#21040; 108-C &#32467;&#26463;&#65289;&#12290;</li>
+      <li _msthash="1248754" _msttexthash="305227715">&#22914;&#26524;&#21442;&#25968;&#20540;&#36229;&#20986;&#27492;&#33539;&#22260;&#65292;&#23427;&#23558;&#24212;&#29992;&#40664;&#35748;&#20540; 60&#65292;&#35813;&#40664;&#35748;&#20540;&#19982;&#38050;&#29748;&#19978;&#30340;&#20013;&#38388; C &#30456;&#21516;&#12290;</li>
+
+      <li _msthash="1249378" _msttexthash="132572076">&#20174;&#20013;&#38388; C&#65292;&#20843;&#24230;&#38899;&#38454;&#20013;&#30340;&#25152;&#26377;&#20854;&#20182;&#38899;&#39640;&#22914;&#19979;&#65306;</li>
+
+
+      <table width="450" border="0" align="center" cellpadding="2">
+        <tbody><tr>
+          <td>
+            <li _msthash="3031301" _msttexthash="3977350">61 = C# &#25110; Db</li>
+            <li _msthash="3032263" _msttexthash="39546">62 ° D</li>
+            <li _msthash="3033225" _msttexthash="3977857">63 = D# &#25110; Eb</li>
+            <li _msthash="3034187" _msttexthash="3644641">64 = E &#25110; Fb</li>
+          </td>
+          <td>
+            <li _msthash="3032198" _msttexthash="3960528">65 = E# &#25110; F</li>
+            <li _msthash="3033160" _msttexthash="3978767">66 = F# &#25110; Gb</li>
+            <li _msthash="3034122" _msttexthash="45019">67 × G</li>
+            <li _msthash="3035084" _msttexthash="3978091">68 = G# &#25110; Ab</li>
+          </td>
+          <td>
+            <li _msthash="3033095" _msttexthash="44447">69 × A</li>
+            <li _msthash="3034057" _msttexthash="3976739">70 = A# &#25110; Bb</li>
+            <li _msthash="3035019" _msttexthash="3643562">71 = B &#25110; Cb</li>
+            <li _msthash="3035981" _msttexthash="3959410">72 = B# &#25110; C</li>
+          </td>
+        </tr>
+        </tbody></table>
+
+
+      <li _msthash="1250626" _msttexthash="187178966">&#35201;&#22312;&#20854;&#20182;&#20843;&#24230;&#38899;&#38454;&#20013;&#29983;&#25104;&#36825;&#20123;&#38899;&#39640;&#65292;&#35831;&#28155;&#21152;&#25110;&#20943;&#21435; 12 &#30340;&#20493;&#25968;&#12290;</li>
+      <br>
+    </td>
+  </tr>
+  <tr>
+    <td><h3 _msthash="1212120" _msttexthash="47110999">&#25345;&#32493;&#26102;&#38388;&#65288;&#27627;&#31186;$a 1&#65289;</h3>
+      <li _msthash="1247376" _msttexthash="204034610">&#25509;&#21463;&#27491;&#25972;&#25968;&#20540;&#65292;&#35813;&#25972;&#25968;&#20540;&#26159;&#38899;&#35843;&#30340;&#38271;&#24230;&#65288;&#20197;&#27627;&#31186;&#20026;&#21333;&#20301;&#65289;&#12290;</li>
+      <li _msthash="1248000" _msttexthash="154972857">&#22914;&#26524;&#21442;&#25968;&#20540;&#20026;&#36127;&#65292;&#21017;&#24212;&#29992;&#40664;&#35748;&#20540; 1 &#31186;&#65288;1000 &#27627;&#31186;&#65289;&#12290;</li>
+      <br>
+    </td>
+  </tr>
+  <tr>
+    <td><h3 _msthash="1212614" _msttexthash="22837750">&#20202;&#22120; &#65288;$a 2&#65289;</h3>
+      <li _msthash="1247870" _msttexthash="232218948">&#25509;&#21463;&#27491;&#23383;&#33410;&#20540; &#65288;0-127&#65289;&#65292;&#35813;&#20540;&#34920;&#31034;&#29992;&#20110;&#25773;&#25918;&#38899;&#35843;&#30340;&#19968;&#33324; MIDI"&#34917;&#19969;"&#12290;</li>
+      <li _msthash="1248494" _msttexthash="185298217">&#22914;&#26524;&#21442;&#25968;&#36229;&#20986;&#27492;&#33539;&#22260;&#65292;&#23427;&#23558;&#24212;&#29992;&#40664;&#35748;&#20540; 0&#65292;&#21363;&#22768;&#23398;<em _istranslated="1">&#22823;&#38050;&#29748;</em>&#12290;</li>
+      <li _msthash="1249118" _msttexthash="2073642077">&#19968;&#33324; MIDI &#26631;&#20934;&#21270;&#19982;&#27599;&#20010;&#21487;&#33021;&#30340;&#20048;&#22120;&#20851;&#32852;&#30340;&#25968;&#23383;&#65288;&#36890;&#24120;<em _istranslated="1">&#31216;&#20026;&#31243;&#24207;&#26356;&#25913;</em>&#32534;&#21495;&#65289;&#65292;&#20294;&#23427;&#19981;&#33021;&#30830;&#23450;&#38899;&#35843;&#30340;&#22768;&#38899;&#12290;&#36825;&#30001;&#20135;&#29983;&#22768;&#38899;&#30340;&#21512;&#25104;&#22120;&#20915;&#23450;&#12290;&#22240;&#27492;&#65292;<em _istranslated="1">&#19968;&#21488;&#35745;&#31639;&#26426;&#19978;&#30340; Tuba&#65288;</em>&#20462;&#34917;&#31243;&#24207; 58&#65289;&#21548;&#36215;&#26469;&#21487;&#33021;&#19982;&#21478;&#19968;&#21488;&#35745;&#31639;&#26426;&#19978;&#30340;&#21516;&#19968;&#20462;&#34917;&#31243;&#24207;&#19981;&#21516;&#12290;</li>
+      <li _msthash="1249742" _msttexthash="104492193">128 &#20010;&#21487;&#29992;&#30340;&#20462;&#34917;&#31243;&#24207;&#20998;&#20026; 8 &#20010;&#20202;&#22120;&#31995;&#21015;&#65306;</li>
+      <table width="450" border="0" align="center" cellpadding="2">
+        <tbody><tr>
+          <td width="60" _msthash="2657369" _msttexthash="15483">0-7</td>
+          <td width="160" _msthash="2658266" _msttexthash="6556342">&#38050;&#29748;</td>
+          <td width="60" _msthash="2659163" _msttexthash="29744">64-71</td>
+          <td _msthash="2660060" _msttexthash="6525402">&#33446;&#33479;</td>
+        </tr>
+        <tr>
+          <td width="60" _msthash="2658201" _msttexthash="22399">8-15</td>
+          <td width="160" _msthash="2659098" _msttexthash="14098955">&#33394;&#24230;&#25171;&#20987;&#20048;</td>
+          <td width="60" _msthash="2659995" _msttexthash="30771">72-79</td>
+          <td _msthash="2660892" _msttexthash="2880059">&#31649;</td>
+        </tr>
+        <tr>
+          <td width="60" _msthash="2659033" _msttexthash="29133">16-23</td>
+          <td width="160" _msthash="2659930" _msttexthash="4451512">&#22120;&#23448;</td>
+          <td width="60" _msthash="2660827" _msttexthash="30498">80-87</td>
+          <td _msthash="2661724" _msttexthash="11634415">&#21512;&#25104;&#24341;&#32447;</td>
+        </tr>
+        <tr>
+          <td width="60" _msthash="2659865" _msttexthash="28860">24-31</td>
+          <td width="160" _msthash="2660762" _msttexthash="4056611">&#21513;&#20182;</td>
+          <td width="60" _msthash="2661659" _msttexthash="31174">88-95</td>
+          <td _msthash="2662556" _msttexthash="7194239">&#21512;&#25104;&#22443;</td>
+        </tr>
+        <tr>
+          <td width="60" _msthash="2660697" _msttexthash="29887">32-39</td>
+          <td width="160" _msthash="2661594" _msttexthash="5892978">&#20302;&#38899;</td>
+          <td width="60" _msthash="2662491" _msttexthash="37258">96-103</td>
+          <td _msthash="2663388" _msttexthash="11050104">&#21512;&#25104;&#25928;&#26524;</td>
+        </tr>
+        <tr>
+          <td width="60" _msthash="2661529" _msttexthash="29614">40-47</td>
+          <td width="160" _msthash="2662426" _msttexthash="7748663">&#23383;&#31526;&#20018;</td>
+          <td width="60" _msthash="2663323" _msttexthash="44317">104-111</td>
+          <td _msthash="2664220" _msttexthash="5228067">&#27665;&#26063;</td>
+        </tr>
+        <tr>
+          <td width="60" _msthash="2662361" _msttexthash="30290">48-55</td>
+          <td width="160" _msthash="2663258" _msttexthash="6123234">&#38598;&#25104;</td>
+          <td width="60" _msthash="2664155" _msttexthash="45539">112-119</td>
+          <td _msthash="2665052" _msttexthash="4473209">&#25171;&#20987;</td>
+        </tr>
+        <tr>
+          <td width="60" _msthash="2663193" _msttexthash="30017">56-63</td>
+          <td width="160" _msthash="2664090" _msttexthash="7661836">&#40644;&#38108;</td>
+          <td width="60" _msthash="2664987" _msttexthash="45227">120-127</td>
+          <td _msthash="2665884" _msttexthash="12599080">&#22768;&#38899;&#25928;&#26524;</td>
+        </tr>
+        </tbody></table>
+      <li _msthash="1250990" _msttexthash="3091670309">&#35831;&#27880;&#24847;&#65292;&#22312; Java &#20043;&#22806;&#65292;&#19968;&#33324; MIDI &#36890;&#24120;&#26159;&#25351;&#20462;&#34917;&#31243;&#24207; 1-128&#12290;&#24403;&#24341;&#29992;&#19968;&#33324; MIDI &#20462;&#34917;&#31243;&#24207;&#30340;&#21015;&#34920;&#26102;&#65292;&#24517;&#39035;&#20943;&#21435; 1 &#25165;&#33021;&#25773;&#25918;&#27491;&#30830;&#30340;&#20462;&#34917;&#31243;&#24207;&#12290;&#26377;&#20851;&#19968;&#33324; MIDI &#20202;&#22120;&#30340;&#23436;&#25972;&#21015;&#34920;&#65292;<a href="http://www.midi.org/" _istranslated="1">&#35831;&#21442;&#38405; www.midi.org/about-midi/gm/gm1sound.shtml</a>&#12290;&#36890;&#29992; MIDI &#36890;&#36947; 10 &#25171;&#20987;&#38190;&#22270;&#19982;&#38899;&#35843;&#29983;&#25104;&#22120;&#26041;&#27861;&#30456;&#20851;&#65292;&#22240;&#20026;&#23427;&#22987;&#32456;&#40664;&#35748;&#20026; MIDI &#36890;&#36947; 1&#12290;</li>
+      <br>
+    </td>
+  </tr>
+  <tr>
+    <td><h3 _msthash="1213108" _msttexthash="26120861">&#38899;&#37327; &#65288;$a 3&#65289;</h3>
+      <li _msthash="1248364" _msttexthash="446461821">&#25509;&#21463;&#27491;&#23383;&#33410;&#20540; &#65288;0-127&#65289;&#65292;&#20854;&#20013; 127 &#26368;&#21709;&#20142;&#65292;0 &#20026;&#38745;&#38899;&#12290;&#27492;&#20540;&#34920;&#31034; MIDI &#36895;&#24230;&#65292;&#25351;&#38899;&#35843;&#30340;&#21021;&#22987;&#25915;&#20987;&#12290;</li>
+      <li _msthash="1248988" _msttexthash="112500336">&#22914;&#26524;&#21442;&#25968;&#20540;&#36229;&#20986;&#27492;&#33539;&#22260;&#65292;&#23427;&#23558;&#24212;&#29992;&#40664;&#35748;&#20540; 100&#12290;</li>
+      <li _msthash="1249612" _msttexthash="1483188408">MIDI &#36895;&#24230;&#27979;&#37327;&#22312;&#65288;<em _istranslated="1">&#25110;&#27880;&#24847;&#20851;&#38381;</em><em _istranslated="1">&#65289;&#28040;&#24687;</em>&#19978;&#25773;&#25918;&#30340;&#38899;&#31526;&#26377;&#22810;&#22256;&#38590;&#65292;&#20063;&#35768;&#22312; MIDI &#25511;&#21046;&#22120;&#19978;&#20687;&#38190;&#30424;&#19968;&#26679;&#12290;&#22823;&#22810;&#25968; MIDI &#21512;&#25104;&#22120;&#37117;&#20250;&#22312;&#23545;&#25968;&#23610;&#24230;&#19978;&#23558;&#20854;&#36716;&#25442;&#20026;&#20307;&#31215;&#65292;&#20854;&#20013;&#25391;&#24133;&#24046;&#24322;&#20250;&#38543;&#30528;&#36895;&#24230;&#20540;&#30340;&#22686;&#21152;&#32780;&#20943;&#23567;&#12290;</li>
+      <li _msthash="1250236" _msttexthash="607332726">&#35831;&#27880;&#24847;&#65292;&#26356;&#22797;&#26434;&#30340;&#21512;&#25104;&#22120;&#19978;&#30340;&#36895;&#24230;&#20540;&#20063;&#20250;&#24433;&#21709;&#38899;&#35843;&#30340;&#38899;&#33394;&#65288;&#22240;&#20026;&#22823;&#22810;&#25968;&#20048;&#22120;&#22312;&#25773;&#25918;&#22768;&#38899;&#26356;&#22823;&#25110;&#26356;&#26580;&#21644;&#26102;&#21548;&#36215;&#26469;&#19981;&#21516;&#65289;&#12290;</li>
+    </td>
+  </tr>
+  </tbody></table><font _mstmutation="1" _msthash="129521" _msttexthash="183659021">&#31995;&#32479;&#26381;&#21153;31&#30001;&#22885;&#29305;&#36125;&#22240;&#23398;&#29983;&#25176;&#23612;·&#24067;&#32599;&#20811;&#20110;2007&#24180;7&#26376;&#24320;&#21457;&#21644;&#35760;&#24405;&#12290;</font></p>
+</body>
+</html>
