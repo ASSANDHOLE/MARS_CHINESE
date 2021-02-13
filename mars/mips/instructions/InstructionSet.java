@@ -630,7 +630,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                }));
          instructionList.add(
                 new BasicInstruction("srlv $t1,$t2,$t3",
-            	 "Shift right logical variable : Set $t1 to result of shifting $t2 right by number of bits specified by value in low-order 5 bits of $t3",
+            	 "逻辑右移-变量 : 令 $t1 为 $t2 右移 $t3低位5位 的数 的值",
                 BasicInstructionFormat.R_FORMAT,
                 "000000 ttttt sssss fffff 00000 000110",
                 new SimulationCode()
@@ -646,7 +646,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                }));
          instructionList.add(
                 new BasicInstruction("lw $t1,-100($t2)",
-            	 "Load word : Set $t1 to contents of effective memory word address",
+            	 "载入word : 将 $t1 设置为有效的 word 地址的内容",
                 BasicInstructionFormat.I_FORMAT,
                 "100011 ttttt fffff ssssssssssssssss",
                 new SimulationCode()
@@ -668,7 +668,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                }));
          instructionList.add(
                 new BasicInstruction("ll $t1,-100($t2)",
-                "Load linked : Paired with Store Conditional (sc) to perform atomic read-modify-write.  Treated as equivalent to Load Word (lw) because MARS does not simulate multiple processors.",
+                "Load linked : 与存储条件(sc) 配对以执行 原子读取-修改-写入。由于MARS不模拟多个处理器，因此被视为等效于载入word(lw)。",
             	 BasicInstructionFormat.I_FORMAT,
                 "110000 ttttt fffff ssssssssssssssss",
             	 // The ll (load link) command is supposed to be the front end of an atomic
@@ -698,7 +698,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                }));
          instructionList.add(
                 new BasicInstruction("lwl $t1,-100($t2)",
-                "Load word left : Load from 1 to 4 bytes left-justified into $t1, starting with effective memory byte address and continuing through the low-order byte of its word",
+                "左载入word : 从 1 到 4 字节左对齐载入 $t1 ，从有效word地址开始，一直到其字的低位字节",
             	 BasicInstructionFormat.I_FORMAT,
                 "100010 ttttt fffff ssssssssssssssss",
                 new SimulationCode()
@@ -723,7 +723,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                }));
          instructionList.add(
                 new BasicInstruction("lwr $t1,-100($t2)",
-                "Load word right : Load from 1 to 4 bytes right-justified into $t1, starting with effective memory byte address and continuing through the high-order byte of its word",
+                "右载入word : 从 1 到 4 字节右对齐载入 $t1 ，从有效word地址开始，一直到其字的高位字节",
             	 BasicInstructionFormat.I_FORMAT,
                 "100110 ttttt fffff ssssssssssssssss",
                 new SimulationCode()

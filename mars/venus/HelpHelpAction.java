@@ -221,32 +221,32 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                "<td><tt>100000</tt></td><td>有符号32位整数 (-2147483648 to 2147483647)</td>" +
             "</tr><tr>" +
             "</tr><tr>" +
-               "<td colspan=2><b><i><font size=+1>Load & Store addressing mode, basic instructions</font></i></b></td>" +
+               "<td colspan=2><b><i><font size=+1>加载和存储寻址模式，基础指令</font></i></b></td>" +
             "</tr><tr>" +
-               "<td><tt>-100($t2)</tt></td><td>sign-extended 16-bit integer added to contents of $t2</td>" + 
+               "<td><tt>-100($t2)</tt></td><td>将符号扩展的16位整数添加到 contents of $t2</td>" +
             "</tr><tr>" +
             "</tr><tr>" +
-               "<td colspan=2><b><i><font size=+1>Load & Store addressing modes, pseudo instructions</font></i></b></td>" + 
+               "<td colspan=2><b><i><font size=+1>加载和存储寻址模式，伪指令</font></i></b></td>" +
             "</tr><tr>" +
                "<td><tt>($t2)</tt></td><td>contents of $t2</td>" + 
             "</tr><tr>" +
-               "<td><tt>-100</tt></td><td>signed 16-bit integer</td>" + 
+               "<td><tt>-100</tt></td><td>有符号16位整数</td>" +
             "</tr><tr>" +
-               "<td><tt>100</tt></td><td>unsigned 16-bit integer</td>" + 
+               "<td><tt>100</tt></td><td>无符号16位整数</td>" +
             "</tr><tr>" +
-               "<td><tt>100000</tt></td><td>signed 32-bit integer</td>" +
+               "<td><tt>100000</tt></td><td>有符号32位整数</td>" +
             "</tr><tr>" +
-               "<td><tt>100($t2)</tt></td><td>zero-extended unsigned 16-bit integer added to contents of $t2</td>" + 
+               "<td><tt>100($t2)</tt></td><td>零扩展无符号16位整数添加到 contents of $t2</td>" +
             "</tr><tr>" +
-               "<td><tt>100000($t2)</tt></td><td>signed 32-bit integer added to contents of $t2</td>" + 
+               "<td><tt>100000($t2)</tt></td><td>有符号32位整数添加到 contents of $t2</td>" +
             "</tr><tr>" +
-               "<td><tt>label</tt></td><td>32-bit address of label</td>" + 
+               "<td><tt>label</tt></td><td>标签的32位地址</td>" +
             "</tr><tr>" +
-               "<td><tt>label($t2)</tt></td><td>32-bit address of label added to contents of $t2</td>" + 
+               "<td><tt>label($t2)</tt></td><td>标签的32位地址添加到 contents of $t2</td>" +
             "</tr><tr>" +
-               "<td><tt>label+100000</tt></td><td>32-bit integer added to label's address</td>" + 
+               "<td><tt>label+100000</tt></td><td>标签的32位地址加上32位整数</td>" +
             "</tr><tr>" +
-               "<td><tt>label+100000($t2)&nbsp;&nbsp;&nbsp;</tt></td><td>sum of 32-bit integer, label's address, and contents of $t2</td>"+
+               "<td><tt>label+100000($t2)&nbsp;&nbsp;&nbsp;</tt></td><td>32位整数, 标签的32位地址 和 contents of $t2 的和</td>"+
             "</tr>" +
             "</table></center></html>";
       	// Original code:         mipsHelpInfo.add(new JLabel(helpRemarks, JLabel.CENTER), BorderLayout.NORTH);
@@ -258,12 +258,12 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
          mipsHelpInfo.add(operandsScrollPane, BorderLayout.NORTH);
          // Below the label is a tabbed pane with categories of MIPS help
          JTabbedPane tabbedPane = new JTabbedPane();
-         tabbedPane.addTab("Basic Instructions", createMipsInstructionHelpPane("mars.mips.instructions.BasicInstruction"));
-         tabbedPane.addTab("Extended (pseudo) Instructions", createMipsInstructionHelpPane("mars.mips.instructions.ExtendedInstruction"));
+         tabbedPane.addTab("基础指令", createMipsInstructionHelpPane("mars.mips.instructions.BasicInstruction"));
+         tabbedPane.addTab("拓展(伪)指令", createMipsInstructionHelpPane("mars.mips.instructions.ExtendedInstruction"));
          tabbedPane.addTab("Directives", createMipsDirectivesHelpPane());
          tabbedPane.addTab("Syscalls", createHTMLHelpPanel("SyscallHelp.html"));
-         tabbedPane.addTab("Exceptions", createHTMLHelpPanel("ExceptionsHelp.html"));
-         tabbedPane.addTab("Macros", createHTMLHelpPanel("MacrosHelp.html"));
+         tabbedPane.addTab("异常", createHTMLHelpPanel("ExceptionsHelp.html"));
+         tabbedPane.addTab("宏", createHTMLHelpPanel("MacrosHelp.html"));
          operandsScrollPane.setPreferredSize(new Dimension((int)this.getSize().getWidth(), (int) (this.getSize().getHeight()*.2)));
          operandsScrollPane.getVerticalScrollBar().setUnitIncrement(10);
          tabbedPane.setPreferredSize(new Dimension((int)this.getSize().getWidth(), (int) (this.getSize().getHeight()*.6)));

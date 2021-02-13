@@ -45,27 +45,27 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       private static ArrayList directiveList = new ArrayList();
       public static final Directives DATA   = new Directives(".data", "存储在下一个可用地址的数据段中的后续项");
       public static final Directives TEXT   = new Directives(".text", "存储在下一个可用地址的文本段中的后续项(指令)");
-      public static final Directives WORD   = new Directives(".word", "Store the listed value(s) as 32 bit words on word boundary");
+      public static final Directives WORD   = new Directives(".word", "将列出的值存储为32位的word");
       public static final Directives ASCII  = new Directives(".ascii", "将字符串存储在数据段中，但不添加空终止符");
       public static final Directives ASCIIZ = new Directives(".asciiz", "将字符串存储在数据段中并添加空终止符");
-      public static final Directives BYTE   = new Directives(".byte", "Store the listed value(s) as 8 bit bytes");
-      public static final Directives ALIGN  = new Directives(".align", "Align next data item on specified byte boundary (0=byte, 1=half, 2=word, 3=double)"); 
-      public static final Directives HALF   = new Directives(".half", "Store the listed value(s) as 16 bit halfwords on halfword boundary");
-      public static final Directives SPACE  = new Directives(".space", "Reserve the next specified number of bytes in Data segment");
-      public static final Directives DOUBLE = new Directives(".double", "Store the listed value(s) as double precision floating point");
-      public static final Directives FLOAT  = new Directives(".float", "Store the listed value(s) as single precision floating point");
-      public static final Directives EXTERN = new Directives(".extern", "Declare the listed label and byte length to be a global data field");
-      public static final Directives KDATA  = new Directives(".kdata", "Subsequent items stored in Kernel Data segment at next available address");
-      public static final Directives KTEXT  = new Directives(".ktext", "Subsequent items (instructions) stored in Kernel Text segment at next available address");
-      public static final Directives GLOBL  = new Directives(".globl", "Declare the listed label(s) as global to enable referencing from other files");
-      public static final Directives SET    = new Directives(".set", "Set assembler variables.  Currently ignored but included for SPIM compatability");
+      public static final Directives BYTE   = new Directives(".byte", "将列出的值存储为8位的byte");
+      public static final Directives ALIGN  = new Directives(".align", "将下一个数据字节对齐 (0=byte, 1=half, 2=word, 3=double)");
+      public static final Directives HALF   = new Directives(".half", "将列出的值存储为16位的halfword");
+      public static final Directives SPACE  = new Directives(".space", "预留数据段中的下一个指定字节数");
+      public static final Directives DOUBLE = new Directives(".double", "将列出的值存储为双精度浮点");
+      public static final Directives FLOAT  = new Directives(".float", "将列出的值存储为单精度浮点");
+      public static final Directives EXTERN = new Directives(".extern", "声明列出的标签和字节长度为全局数据字段");
+      public static final Directives KDATA  = new Directives(".kdata", "后续项目存储在内核数据段中的下一个可用地址");
+      public static final Directives KTEXT  = new Directives(".ktext", "后续项目(指令)存储在内核文本段中下一个可用地址的");
+      public static final Directives GLOBL  = new Directives(".globl", "将列出的标签声明为全局标签，以从其他文件进行引用");
+      public static final Directives SET    = new Directives(".set", "设置汇编程序变量。 当前已忽略，但为了SLIM兼容性而被包括在内");
       /*  EQV added by DPS 11 July 2012 */
-      public static final Directives EQV    = new Directives(".eqv", "Substitute second operand for first. First operand is symbol, second operand is expression (like #define)");
+      public static final Directives EQV    = new Directives(".eqv", "将第二个操作符替换为第一个。第一个操作符是符号，第二个操作符是表达式 (类似 #define)");
       /* MACRO and END_MACRO added by Mohammad Sekhavat Oct 2012 */    
-      public static final Directives MACRO  = new Directives(".macro", "Begin macro definition.  See .end_macro");
-      public static final Directives END_MACRO = new Directives(".end_macro", "End macro definition.  See .macro");
+      public static final Directives MACRO  = new Directives(".macro", "开始宏定义。  参见 .end_macro");
+      public static final Directives END_MACRO = new Directives(".end_macro", "结束宏定义。  参见 .macro");
       /*  INCLUDE added by DPS 11 Jan 2013 */
-      public static final Directives INCLUDE   = new Directives(".include", "Insert the contents of the specified file.  Put filename in quotes.");
+      public static final Directives INCLUDE   = new Directives(".include", "插入指定文件的内容。将文件名放在引号中。");
    
    
       private String descriptor;
