@@ -44,8 +44,8 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       public static final String ERROR_MESSAGE_PREFIX = "Error";
       public static final String WARNING_MESSAGE_PREFIX = "Warning";
       public static final String FILENAME_PREFIX = " in ";
-      public static final String LINE_PREFIX = " line ";
-      public static final String POSITION_PREFIX = " column ";
+      public static final String LINE_PREFIX = " 行 ";
+      public static final String POSITION_PREFIX = " 列 ";
       public static final String MESSAGE_SEPARATOR = ": ";
    	
    

@@ -668,7 +668,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                }));
          instructionList.add(
                 new BasicInstruction("ll $t1,-100($t2)",
-                "Load linked : 与存储条件(sc) 配对以执行 原子读取-修改-写入。由于MARS不模拟多个处理器，因此被视为等效于载入word(lw)。",
+                "Load linked : 与Store Conditional(sc) 配对以执行 原子读取-修改-写入。由于MARS不模拟多个处理器，因此被视为等效于载入word(lw)。",
             	 BasicInstructionFormat.I_FORMAT,
                 "110000 ttttt fffff ssssssssssssssss",
             	 // The ll (load link) command is supposed to be the front end of an atomic
@@ -748,7 +748,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                }));
          instructionList.add(
                 new BasicInstruction("sw $t1,-100($t2)",
-                "Store word : Store contents of $t1 into effective memory word address",
+                "储存word : 将 $t1 的内容存储到有效的word地址中",
             	 BasicInstructionFormat.I_FORMAT,
                 "101011 ttttt fffff ssssssssssssssss",
                 new SimulationCode()
@@ -770,7 +770,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                }));
          instructionList.add(
                 new BasicInstruction("sc $t1,-100($t2)",
-                "Store conditional : Paired with Load Linked (ll) to perform atomic read-modify-write.  Stores $t1 value into effective address, then sets $t1 to 1 for success.  Always succeeds because MARS does not simulate multiple processors.",
+                "Store Conditional : 与Load Linked(ll)配对以执行原子读取-修改-写入。 将 $t1 的值存储到有效地址中，然后将 $t1 设置为1以确保成功。 始终成功，因为MARS不模拟多个处理器。",
             	 BasicInstructionFormat.I_FORMAT,
                 "111000 ttttt fffff ssssssssssssssss",
             	 // See comments with "ll" instruction above.  "sc" is implemented
@@ -795,7 +795,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                }));
          instructionList.add(
                 new BasicInstruction("swl $t1,-100($t2)",
-                "Store word left : Store high-order 1 to 4 bytes of $t1 into memory, starting with effective byte address and continuing through the low-order byte of its word",
+                "左存储word : 将 $t1 的高1到4个字节存储到内存中，从有效字节地址开始，一直到其低位字节",
             	 BasicInstructionFormat.I_FORMAT,
                 "101010 ttttt fffff ssssssssssssssss",
                 new SimulationCode()
@@ -819,7 +819,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                }));
          instructionList.add(
                 new BasicInstruction("swr $t1,-100($t2)",
-                "Store word right : Store low-order 1 to 4 bytes of $t1 into memory, starting with high-order byte of word containing effective byte address and continuing through that byte address",
+                "右存储word : 将 $t1 的低1到4个字节存储到内存中，starting with high-order byte of word containing effective byte address and continuing through that byte address",
             	 BasicInstructionFormat.I_FORMAT,
                 "101110 ttttt fffff ssssssssssssssss",
                 new SimulationCode()
@@ -843,7 +843,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                }));
          instructionList.add(
                 new BasicInstruction("lui $t1,100",
-                "Load upper immediate : Set high-order 16 bits of $t1 to 16-bit immediate and low-order 16 bits to 0",
+                "高位载入立即数 : 设置高16位为16位立即数，低16位为0",
             	 BasicInstructionFormat.I_FORMAT,
                 "001111 00000 fffff ssssssssssssssss",
                 new SimulationCode()
@@ -856,7 +856,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                }));
          instructionList.add(
                 new BasicInstruction("beq $t1,$t2,label",
-                "Branch if equal : Branch to statement at label's address if $t1 and $t2 are equal",
+                "如果相等的分支(branch) : 如果 $t1 和 $t2 相等，则跳转到标签地址的语句",
             	 BasicInstructionFormat.I_BRANCH_FORMAT,
                 "000100 fffff sssss tttttttttttttttt",
                 new SimulationCode()
@@ -874,7 +874,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                }));
          instructionList.add(
                 new BasicInstruction("bne $t1,$t2,label",
-                "Branch if not equal : Branch to statement at label's address if $t1 and $t2 are not equal",
+                "如果不相等则分支(branch) : 如果 $t1 和 $t2 不相等，则跳转到标签地址的语句",
             	 BasicInstructionFormat.I_BRANCH_FORMAT,
                 "000101 fffff sssss tttttttttttttttt",
                 new SimulationCode()
@@ -891,7 +891,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                }));
          instructionList.add(
                 new BasicInstruction("bgez $t1,label",
-                "Branch if greater than or equal to zero : Branch to statement at label's address if $t1 is greater than or equal to zero",
+                "如果大于或等于零则分支(branch) : 如果 $t1 大于或等于零，则跳转到标签地址的语句",
             	 BasicInstructionFormat.I_BRANCH_FORMAT,
                 "000001 fffff 00001 ssssssssssssssss",
                 new SimulationCode()
@@ -907,7 +907,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                }));
          instructionList.add(
                 new BasicInstruction("bgezal $t1,label",
-                "Branch if greater then or equal to zero and link : If $t1 is greater than or equal to zero, then set $ra to the Program Counter and branch to statement at label's address",
+                "如果大于或等于零则分支并链接(branch and link) : 如果 $t1 大于或等于零，则将 $ra 设置为程序计数器，并跳转到标签地址的语句",
             	 BasicInstructionFormat.I_BRANCH_FORMAT,
                 "000001 fffff 10001 ssssssssssssssss",
                 new SimulationCode()
@@ -924,7 +924,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                }));
          instructionList.add(
                 new BasicInstruction("bgtz $t1,label",
-                "Branch if greater than zero : Branch to statement at label's address if $t1 is greater than zero",
+                "如果大于零则分支(branch) : 如果 $t1 大于零，则跳转到标签地址的语句",
             	 BasicInstructionFormat.I_BRANCH_FORMAT,
                 "000111 fffff 00000 ssssssssssssssss",
                 new SimulationCode()
@@ -940,7 +940,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                }));
          instructionList.add(
                 new BasicInstruction("blez $t1,label",
-                "Branch if less than or equal to zero : Branch to statement at label's address if $t1 is less than or equal to zero",
+                "如果小于或等于零则分支(branch) : 如果 $t1 小于或等于零，则跳转到标签地址的语句",
             	 BasicInstructionFormat.I_BRANCH_FORMAT,
                 "000110 fffff 00000 ssssssssssssssss",
                 new SimulationCode()
@@ -956,7 +956,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                }));
          instructionList.add(
                 new BasicInstruction("bltz $t1,label",
-                "Branch if less than zero : Branch to statement at label's address if $t1 is less than zero",
+                "如果小于零则分支(branch) : 如果 $t1 小于零，则跳转到标签地址的语句",
             	 BasicInstructionFormat.I_BRANCH_FORMAT,
                 "000001 fffff 00000 ssssssssssssssss",
                 new SimulationCode()
@@ -972,7 +972,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                }));
          instructionList.add(
                 new BasicInstruction("bltzal $t1,label",
-                "Branch if less than zero and link : If $t1 is less than or equal to zero, then set $ra to the Program Counter and branch to statement at label's address",
+                "如果小于零则分支并链接(branch and link) : 如果 $t1 小于零，则将 $ra 设置为程序计数器，并跳转到标签地址的语句",
             	 BasicInstructionFormat.I_BRANCH_FORMAT,
                 "000001 fffff 10000 ssssssssssssssss",
                 new SimulationCode()
@@ -989,7 +989,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                }));
          instructionList.add(
                 new BasicInstruction("slt $t1,$t2,$t3",
-                "Set less than : If $t2 is less than $t3, then set $t1 to 1 else set $t1 to 0",
+                "设置小于 : 如果 $t2 小于 $t3 则将 $t1 置为 1，否则置 0",
             	 BasicInstructionFormat.R_FORMAT,
                 "000000 sssss ttttt fffff 00000 101010",
                 new SimulationCode()
@@ -1006,7 +1006,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                }));
          instructionList.add(
                 new BasicInstruction("sltu $t1,$t2,$t3",
-                "Set less than unsigned : If $t2 is less than $t3 using unsigned comparision, then set $t1 to 1 else set $t1 to 0",
+                "无符号设置小于 : 如果无符号比较 $t2 小于 $t3 则将 $t1 置为1，否则置 0",
             	 BasicInstructionFormat.R_FORMAT,
                 "000000 sssss ttttt fffff 00000 101011",
                 new SimulationCode()
@@ -1030,7 +1030,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                }));
          instructionList.add(
                 new BasicInstruction("slti $t1,$t2,-100",
-                "Set less than immediate : If $t2 is less than sign-extended 16-bit immediate, then set $t1 to 1 else set $t1 to 0",
+                "设置小于立即数 : 如果 $t2 小于符号扩展的16位立即数，则将 $t1 置为 1，否则置0",
             	 BasicInstructionFormat.I_FORMAT,
                 "001010 sssss fffff tttttttttttttttt",
                 new SimulationCode()
@@ -1048,7 +1048,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                }));
          instructionList.add(
                 new BasicInstruction("sltiu $t1,$t2,-100",
-                "Set less than immediate unsigned : If $t2 is less than  sign-extended 16-bit immediate using unsigned comparison, then set $t1 to 1 else set $t1 to 0",
+                "无符号设置小于立即数 : 如果无符号比较 $t2 小于符号扩展的16位立即数，则将 $t1 置为 1，否则置0",
             	 BasicInstructionFormat.I_FORMAT,
                 "001011 sssss fffff tttttttttttttttt",
                 new SimulationCode()
@@ -1073,7 +1073,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                }));
          instructionList.add(
                 new BasicInstruction("movn $t1,$t2,$t3",
-                "Move conditional not zero : Set $t1 to $t2 if $t3 is not zero",
+                "移动如果非零 : 如果 $t3 不为零，则将 $t1 设为 $t2 ",
             	 BasicInstructionFormat.R_FORMAT,
                 "000000 sssss ttttt fffff 00000 001011",
                 new SimulationCode()
@@ -1087,7 +1087,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                }));
          instructionList.add(
                 new BasicInstruction("movz $t1,$t2,$t3",
-                "Move conditional zero : Set $t1 to $t2 if $t3 is zero",
+                "移动如果为零 : 如果 $t3 为零，则将 $t1 设为 $t2 ",
             	 BasicInstructionFormat.R_FORMAT,
                 "000000 sssss ttttt fffff 00000 001010",
                 new SimulationCode()
@@ -1157,7 +1157,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                }));
          instructionList.add(
                 new BasicInstruction("break 100", 
-            	 "Break execution with code : Terminate program execution with specified exception code",
+            	 "Break execution with code : 使用指定的异常代码终止程序执行",
             	 BasicInstructionFormat.R_FORMAT,
                 "000000 ffffffffffffffffffff 001101",
                 new SimulationCode()
@@ -1166,7 +1166,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                   {  // At this time I don't have exception processing or trap handlers
                      // so will just halt execution with a message.
                      int[] operands = statement.getOperands();
-                     throw new ProcessingException(statement, "break instruction executed; code = "+
+                     throw new ProcessingException(statement, "break 指令已执行; code = "+
                           operands[0]+".", Exceptions.BREAKPOINT_EXCEPTION);
                   }
                }));	
@@ -1180,13 +1180,13 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                    public void simulate(ProgramStatement statement) throws ProcessingException
                   {  // At this time I don't have exception processing or trap handlers
                      // so will just halt execution with a message.
-                     throw new ProcessingException(statement, "break instruction executed; no code given.",
+                     throw new ProcessingException(statement, "break 指令已执行; no code given.",
                         Exceptions.BREAKPOINT_EXCEPTION);
                   }
                }));					
          instructionList.add(
                 new BasicInstruction("syscall", 
-            	 "Issue a system call : Execute the system call specified by value in $v0",
+            	 "发出系统调用 : 执行由 $v0 中的值指定的系统调用",
             	 BasicInstructionFormat.R_FORMAT,
                 "000000 00000 00000 00000 00000 001100",
                 new SimulationCode()
@@ -1198,7 +1198,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                }));
          instructionList.add(
                 new BasicInstruction("j target", 
-            	 "Jump unconditionally : Jump to statement at target address",
+            	 "无条件跳转 : 跳转到目标地址的语句",
             	 BasicInstructionFormat.J_FORMAT,
                 "000010 ffffffffffffffffffffffffff",
                 new SimulationCode()
@@ -1213,7 +1213,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                }));
          instructionList.add(
                 new BasicInstruction("jr $t1", 
-            	 "Jump register unconditionally : Jump to statement whose address is in $t1",
+            	 "无条件跳转寄存器 : 跳转到地址在 $t1 中的语句",
             	 BasicInstructionFormat.R_FORMAT,
                 "000000 fffff 00000 00000 00000 001000",
                 new SimulationCode()
