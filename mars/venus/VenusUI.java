@@ -406,9 +406,9 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                									  "如果设置，汇编程序警告将被解释为错误并阻止成功的汇编",
                									  null,null,
                									  mainUI);
-            settingsStartAtMainAction       = new SettingsStartAtMainAction("将程序计数器初始化为 global 'main'(如果已定义)",
+            settingsStartAtMainAction       = new SettingsStartAtMainAction("将程序计数器(return address)初始化为 global 'main'(如果已定义)",
                                             null,
-               									  "如果设置，则汇编器会将程序计数器初始化为全局标记为 'main' 的文本地址(如果已定义)",
+               									  "如果设置，则汇编器会将程序计数器(return address)初始化为全局标记为 'main' 的文本地址(如果已定义)",
                									  null,null,
                									  mainUI);
             settingsProgramArgumentsAction = new SettingsProgramArgumentsAction("提供给MIPS程序的程序参数 ",

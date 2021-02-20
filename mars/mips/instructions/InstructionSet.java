@@ -907,7 +907,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                }));
          instructionList.add(
                 new BasicInstruction("bgezal $t1,label",
-                "如果大于或等于零则分支并链接(branch and link) : 如果 $t1 大于或等于零，则将 $ra 设置为程序计数器，并跳转到标签地址的语句",
+                "如果大于或等于零则分支并链接(branch and link) : 如果 $t1 大于或等于零，则将 $ra 设置为程序计数器(return address)，并跳转到标签地址的语句",
             	 BasicInstructionFormat.I_BRANCH_FORMAT,
                 "000001 fffff 10001 ssssssssssssssss",
                 new SimulationCode()
@@ -972,7 +972,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                }));
          instructionList.add(
                 new BasicInstruction("bltzal $t1,label",
-                "如果小于零则分支并链接(branch and link) : 如果 $t1 小于零，则将 $ra 设置为程序计数器，并跳转到标签地址的语句",
+                "如果小于零则分支并链接(branch and link) : 如果 $t1 小于零，则将 $ra 设置为程序计数器(return address)，并跳转到标签地址的语句",
             	 BasicInstructionFormat.I_BRANCH_FORMAT,
                 "000001 fffff 10000 ssssssssssssssss",
                 new SimulationCode()
@@ -1172,7 +1172,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                }));	
          instructionList.add(
                 new BasicInstruction("break", 
-            	 "Break execution : Terminate program execution with exception",
+            	 "Break execution : 终止程序执行 with exception",
             	 BasicInstructionFormat.R_FORMAT,
                 "000000 00000 00000 00000 00000 001101",
                 new SimulationCode()
@@ -1295,7 +1295,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                }));
          instructionList.add(
                 new BasicInstruction("lh $t1,-100($t2)",
-                "Load halfword : Set $t1 to sign-extended 16-bit value from effective memory halfword address",
+                "载入halfword : 将 $t1 设置为从有效halfword地址进行符号扩展的16位值",
             	 BasicInstructionFormat.I_FORMAT,
                 "100001 ttttt fffff ssssssssssssssss",
                 new SimulationCode()
@@ -1320,7 +1320,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                }));
          instructionList.add(
                 new BasicInstruction("lhu $t1,-100($t2)",
-                "Load halfword unsigned : Set $t1 to zero-extended 16-bit value from effective memory halfword address",
+                "加载无符号halfword : 将 $t1 设置为来自有效halfword地址的零扩展16位值",
             	 BasicInstructionFormat.I_FORMAT,
                 "100101 ttttt fffff ssssssssssssssss",
                 new SimulationCode()
@@ -1345,7 +1345,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                }));
          instructionList.add(
                 new BasicInstruction("lbu $t1,-100($t2)",
-                "Load byte unsigned : Set $t1 to zero-extended 8-bit value from effective memory byte address",
+                "加载无符号byte : 将 $t1 设置为来自有效byte地址的零扩展8位值",
             	 BasicInstructionFormat.I_FORMAT,
                 "100100 ttttt fffff ssssssssssssssss",
                 new SimulationCode()
@@ -1369,7 +1369,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                }));
          instructionList.add(
                 new BasicInstruction("sb $t1,-100($t2)",
-                "Store byte : Store the low-order 8 bits of $t1 into the effective memory byte address",
+                "存储byte : 将 $t1 的低8位存储到有效byte地址中",
             	 BasicInstructionFormat.I_FORMAT,
                 "101000 ttttt fffff ssssssssssssssss",
                 new SimulationCode()
@@ -1393,7 +1393,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                }));
          instructionList.add(
                 new BasicInstruction("sh $t1,-100($t2)",
-                "Store halfword : Store the low-order 16 bits of $t1 into the effective memory halfword address",
+                "存储halfword : 将 $t1 的低8位存储到有效halfword地址中",
             	 BasicInstructionFormat.I_FORMAT,
                 "101001 ttttt fffff ssssssssssssssss",
                 new SimulationCode()
@@ -1417,7 +1417,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                }));				
          instructionList.add(        
                 new BasicInstruction("clo $t1,$t2", 
-            	 "Count number of leading ones : Set $t1 to the count of leading one bits in $t2 starting at most significant bit position",
+            	 "计数前导'1'的位数 : 将 $t1 设置为 $t2 中从最高有效位开始的'1'的计数",
             	 BasicInstructionFormat.R_FORMAT,
             	 // MIPS32 requires rd (first) operand to appear twice in machine code.
             	 // It has to be same as rt (third) operand in machine code, but the
@@ -1451,7 +1451,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                }));	
          instructionList.add(        
                 new BasicInstruction("clz $t1,$t2", 
-            	 "Count number of leading zeroes : Set $t1 to the count of leading zero bits in $t2 starting at most significant bit positio",
+            	 "计数前导'0'的位数 : 将 $t1 设置为 $t2 中从最高有效位开始的'0'的计数",
             	 BasicInstructionFormat.R_FORMAT,
             	 // See comments for "clo" instruction above.  They apply here too.
                 "011100 sssss 00000 fffff 00000 100000",
@@ -1502,7 +1502,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         /////////////////////// Floating Point Instructions Start Here ////////////////
          instructionList.add(
                 new BasicInstruction("add.s $f0,$f1,$f3",
-                "Floating point addition single precision : Set $f0 to single-precision floating point value of $f1 plus $f3", 
+                "单精度浮点加法 : 令 $f0 为单精度浮点值 $f1 加 $f3",
             	 BasicInstructionFormat.R_FORMAT,
                 "010001 10000 ttttt sssss fffff 000000",
                 new SimulationCode()
@@ -1524,7 +1524,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                }));
          instructionList.add(
                 new BasicInstruction("sub.s $f0,$f1,$f3",
-                "Floating point subtraction single precision : Set $f0 to single-precision floating point value of $f1  minus $f3",
+                "单精度浮点减法 : 令 $f0 为单精度浮点值 $f1 减 $f3",
             	 BasicInstructionFormat.R_FORMAT,
                 "010001 10000 ttttt sssss fffff 000001",
                 new SimulationCode()
@@ -1540,7 +1540,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                }));
          instructionList.add(
                 new BasicInstruction("mul.s $f0,$f1,$f3",
-                "Floating point multiplication single precision : Set $f0 to single-precision floating point value of $f1 times $f3",
+                "单精度浮点乘法 : 令 $f0 为单精度浮点值 $f1 乘以 $f3",
             	 BasicInstructionFormat.R_FORMAT,
                 "010001 10000 ttttt sssss fffff 000010",
                 new SimulationCode()
@@ -1556,7 +1556,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                }));
          instructionList.add(
                 new BasicInstruction("div.s $f0,$f1,$f3",
-                "Floating point division single precision : Set $f0 to single-precision floating point value of $f1 divided by $f3",
+                "单精度浮点除法 : 令 $f0 为单精度浮点值 $f1 除以 $f3",
             	 BasicInstructionFormat.R_FORMAT,
                 "010001 10000 ttttt sssss fffff 000011",
                 new SimulationCode()
@@ -1572,7 +1572,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                }));
          instructionList.add(
                 new BasicInstruction("sqrt.s $f0,$f1",
-            	 "Square root single precision : Set $f0 to single-precision floating point square root of $f1",
+            	 "单精度平方根 : 令 $f0 为 $f1 的单精度浮点平方根",
                 BasicInstructionFormat.R_FORMAT,
                 "010001 10000 00000 sssss fffff 000100",
                 new SimulationCode()
@@ -1716,7 +1716,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                }));
          instructionList.add(
                 new BasicInstruction("add.d $f2,$f4,$f6",
-            	 "Floating point addition double precision : Set $f2 to double-precision floating point value of $f4 plus $f6",
+            	 "双精度浮点加法 : 令 $f2 为双精度浮点值 $f4 加 $f6",
             	 BasicInstructionFormat.R_FORMAT,
                 "010001 10001 ttttt sssss fffff 000000",
                 new SimulationCode()
@@ -1739,7 +1739,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                }));
          instructionList.add(
                 new BasicInstruction("sub.d $f2,$f4,$f6",
-            	 "Floating point subtraction double precision : Set $f2 to double-precision floating point value of $f4 minus $f6",
+            	 "双精度浮点减法 : 令 $f2 为双精度浮点值 $f4 减 $f6",
                 BasicInstructionFormat.R_FORMAT,
                 "010001 10001 ttttt sssss fffff 000001",
                 new SimulationCode()
@@ -1762,7 +1762,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                }));
          instructionList.add(
                 new BasicInstruction("mul.d $f2,$f4,$f6",
-            	 "Floating point multiplication double precision : Set $f2 to double-precision floating point value of $f4 times $f6",
+            	 "双精度浮点乘法 : 令 $f2 为双精度浮点值 $f4 乘以 $f6",
                 BasicInstructionFormat.R_FORMAT,
                 "010001 10001 ttttt sssss fffff 000010",
                 new SimulationCode()
@@ -1785,7 +1785,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                }));
          instructionList.add(
                 new BasicInstruction("div.d $f2,$f4,$f6",
-            	 "Floating point division double precision : Set $f2 to double-precision floating point value of $f4 divided by $f6",
+            	 "双精度浮点除法 : 令 $f2 为双精度浮点值 $f4 除以 $f6",
                 BasicInstructionFormat.R_FORMAT,
                 "010001 10001 ttttt sssss fffff 000011",
                 new SimulationCode()
@@ -1808,7 +1808,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                }));
          instructionList.add(
                 new BasicInstruction("sqrt.d $f2,$f4",
-            	 "Square root double precision : Set $f2 to double-precision floating point square root of $f4",
+            	 "双精度平方根 : 令 $f2 为 $f4 的单精度浮点平方根",
                 BasicInstructionFormat.R_FORMAT,
                 "010001 10001 00000 sssss fffff 000100",
                 new SimulationCode()
@@ -2034,7 +2034,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                }));
          instructionList.add(
                 new BasicInstruction("c.eq.s $f0,$f1",
-                "Compare equal single precision : If $f0 is equal to $f1, set Coprocessor 1 condition flag 0 true else set it false",
+                "单精度比较等于 : 如果 $f0 等于 $f1，则设置协处理器1条件标志0为true，否则将其设置为false",
             	 BasicInstructionFormat.R_FORMAT,
                 "010001 10000 sssss fffff 00000 110010",
                 new SimulationCode()
@@ -2106,7 +2106,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                }));
          instructionList.add(
                 new BasicInstruction("c.lt.s $f0,$f1",
-            	 "Compare less than single precision : If $f0 is less than $f1, set Coprocessor 1 condition flag 0 true else set it false",
+            	 "单精度比较小于 : 如果 $f0 小于 $f1，则设置协处理器1条件标志0为true，否则将其设置为false",
                 BasicInstructionFormat.R_FORMAT,
                 "010001 10000 sssss fffff 00000 111100",
                 new SimulationCode()
