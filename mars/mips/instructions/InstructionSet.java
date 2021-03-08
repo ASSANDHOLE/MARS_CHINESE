@@ -240,7 +240,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                }));
          instructionList.add(
                 new BasicInstruction("mul $t1,$t2,$t3",
-            	 "不溢出乘法 : 令 HI = 高32位, LO = 低32位 $t1 与 $t2 的积 (使用 mfhi 访问 HI, mflo 访问 LO)",
+            	 "不溢出乘法 : 令 HI = 高32位, LO 和 $t1 = 低32位 $t2 与 $t3 的积 (使用 mfhi 访问 HI, mflo 访问 LO)",
                 BasicInstructionFormat.R_FORMAT,
                 "011100 sssss ttttt fffff 00000 000010",
                 new SimulationCode()
@@ -856,7 +856,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                }));
          instructionList.add(
                 new BasicInstruction("beq $t1,$t2,label",
-                "如果相等的分支(branch) : 如果 $t1 和 $t2 相等，则跳转到标签地址的语句",
+                "如果相等则分支(branch) : 如果 $t1 和 $t2 相等，则跳转到标签地址的语句",
             	 BasicInstructionFormat.I_BRANCH_FORMAT,
                 "000100 fffff sssss tttttttttttttttt",
                 new SimulationCode()
